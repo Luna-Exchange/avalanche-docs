@@ -1,7 +1,7 @@
 import { type LinkItemType } from 'fumadocs-ui/layouts/docs';
 import { type BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
 import { AvalancheLogo } from '@/components/navigation/avalanche-logo';
-import { Sprout, Logs, MonitorCheck, ArrowUpRight, SendHorizontal, Cable, Bot, Cpu, Cog, Snowflake, BriefcaseBusiness, MessageSquareQuote, Server, Github, Waypoints, HandCoins, HardDrive, Wallet, Search, Cloud, Database, ListFilter, Ticket, Earth } from 'lucide-react';
+import { Sprout, Logs, MonitorCheck, ArrowUpRight, SendHorizontal, Cable, Bot, Cpu, Cog, Snowflake, BriefcaseBusiness, MessageSquareQuote, Server, Github, Waypoints, HandCoins, HardDrive, Wallet, Search, Cloud, Database, ListFilter, Ticket, Earth, LayoutTemplate } from 'lucide-react';
 import Image from 'next/image';
 import Preview9000 from '@/public/nav-banner/9000-logo.png';
 import CoursePreview from '@/public/nav-banner/course-preview.png';
@@ -410,6 +410,13 @@ export const eventsMenu: LinkItemType = {
   ],
 };
 
+export const ambassadorDaoMenu: LinkItemType = {
+  type: 'menu',
+  text: 'Ambassador DAO',
+  url: '/ambassador-dao',
+  items: []
+};
+
 export const baseOptions: BaseLayoutProps = {
   githubUrl: 'https://github.com/ava-labs/avalanche-docs',
   nav: {
@@ -427,5 +434,6 @@ export const baseOptions: BaseLayoutProps = {
     grantsMenu,
     eventsMenu,
     integrationsMenu,
+    ambassadorDaoMenu,
   ],
 };
