@@ -411,10 +411,8 @@ export const eventsMenu: LinkItemType = {
 };
 
 export const ambassadorDaoMenu: LinkItemType = {
-  type: 'menu',
   text: 'Ambassador DAO',
   url: '/ambassador-dao',
-  items: []
 };
 
 export const baseOptions: BaseLayoutProps = {
