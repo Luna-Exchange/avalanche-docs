@@ -12,6 +12,18 @@ const withMDX = createMDX({
 
 /** @type {import('next').NextConfig} */
 const config = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        port: '',
+        pathname: '*',
+        search: '',
+      },
+
+    ]
+  },
   reactStrictMode: true,
   transpilePackages: ['avalanche-docs-toolbox']
 };

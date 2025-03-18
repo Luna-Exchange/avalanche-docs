@@ -21,6 +21,9 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { AuthModal } from "@/components/ambassador-dao/sections/auth-modal";
 import { Outline } from "@/components/ambassador-dao/ui/Outline";
 import { useFetchOpportunity } from "@/services/ambassador-dao/requests/opportunity";
+import Loader from "@/components/ambassador-dao/ui/Loader";
+import { getTimeLeft } from "@/utils/timeFormatting";
+import { IBountyDataType, IJobDataType } from "@/services/ambassador-dao/interfaces/opportunity";
 
 interface FilterDropdownProps {
   label: string;
@@ -66,45 +69,6 @@ const JobsSection = ({ data }: { data: any }) => {
     status: "",
   });
 
-  // Mock data for jobs
-  const jobs = [
-    {
-      id: 1,
-      title: "Write a Twitter thread on Musk.it project & $MIGHT token",
-      company: "Company Name",
-      duration: "Due in 24h",
-      proposals: 60,
-      reward: 1000,
-      currency: "USDC",
-    },
-    {
-      id: 2,
-      title: "Write a Twitter thread on Musk.it project & $MIGHT token",
-      company: "Company Name",
-      duration: "Due in 24h",
-      proposals: 60,
-      reward: 1000,
-      currency: "USDC",
-    },
-    {
-      id: 3,
-      title: "Write a Twitter thread on Musk.it project & $MIGHT token",
-      company: "Company Name",
-      duration: "Due in 24h",
-      proposals: 60,
-      reward: 1000,
-      currency: "USDC",
-    },
-    {
-      id: 4,
-      title: "Write a Twitter thread on Musk.it project & $MIGHT token",
-      company: "Company Name",
-      duration: "Due in 24h",
-      proposals: 60,
-      reward: 1000,
-      currency: "USDC",
-    },
-  ];
 
   return (
     <section className="mb-12 border border-[#27272A] rounded-md py-14 px-8">
@@ -126,6 +90,10 @@ const JobsSection = ({ data }: { data: any }) => {
         <FilterDropdown
           label="Status"
           options={["Open", "In Progress", "Closed"]}
+          // value=""
+          onValueChange={(e) => {
+            console.log(e);
+          }}
         />
 
         <div className="relative">
@@ -141,7 +109,7 @@ const JobsSection = ({ data }: { data: any }) => {
       </div>
 
       <div className="space-y-4">
-        {data.map((job) => (
+        {data?.map((job: any) => (
           <JobCard key={job.id} job={job} />
         ))}
       </div>
@@ -178,7 +146,7 @@ const ViewAllButton = ({ type }: { type: string }) => {
 };
 
 // BountiesSection
-const BountiesSection = ({ data }: { data: any }) => {
+const BountiesSection = ({ data }: {data: any}) => {
   const [filters, setFilters] = useState({
     industry: "",
     skillSet: "",
@@ -186,53 +154,6 @@ const BountiesSection = ({ data }: { data: any }) => {
     reward: "",
   });
 
-  // Mock data for bounties
-  const bounties = [
-    {
-      id: 1,
-      title: "Write a Twitter thread on Musk.it project & $MIGHT token",
-      company: "Company Name",
-      duration: "Due in 23h",
-      proposals: 60,
-      reward: {
-        usdc: 1000,
-        xp: 200,
-      },
-    },
-    {
-      id: 2,
-      title: "Write a Twitter thread on Musk.it project & $MIGHT token",
-      company: "Company Name",
-      duration: "Due in 23h",
-      proposals: 60,
-      reward: {
-        usdc: 1000,
-        xp: 200,
-      },
-    },
-    {
-      id: 3,
-      title: "Write a Twitter thread on Musk.it project & $MIGHT token",
-      company: "Company Name",
-      duration: "Due in 23h",
-      proposals: 60,
-      reward: {
-        usdc: 1000,
-        xp: 200,
-      },
-    },
-    {
-      id: 4,
-      title: "Write a Twitter thread on Musk.it project & $MIGHT token",
-      company: "Company Name",
-      duration: "Due in 23h",
-      proposals: 60,
-      reward: {
-        usdc: 1000,
-        xp: 200,
-      },
-    },
-  ];
 
   return (
     <section className="border border-[#27272A] rounded-md py-14 px-8">
@@ -267,7 +188,7 @@ const BountiesSection = ({ data }: { data: any }) => {
       </div>
 
       <div className="space-y-4">
-        {data?.map((bounty) => (
+        {data?.map((bounty: any) => (
           <BountyCard key={bounty.id} bounty={bounty} />
         ))}
       </div>
@@ -372,20 +293,17 @@ const FilterDropdown = ({
 };
 
 // JobCard
-const JobCard = ({
-  job,
-}: {
-  job: {
-    id: number;
-    title: string;
-    company: string;
-    duration: string;
-    proposals: number;
-    reward: number;
-    currency: string;
-  };
-}) => {
-  const { id, title, company, duration, proposals, reward, currency } = job;
+const JobCard = ({ job }: IJobDataType) => {
+  const {
+    id,
+    title,
+    created_by,
+    total_budget,
+    end_date,
+    proposals,
+    currency,
+    skills,
+  } = job;
 
   const router = useRouter();
 
@@ -399,38 +317,48 @@ const JobCard = ({
       className="border border-gray-700 rounded-lg p-4 hover:border-red-500 transition-colors cursor-pointer"
       onClick={goToDetailsPage}
     >
-      <div className="flex items-start justify-between mb-4">
-        <div>
-          <h3 className="text-lg font-medium text-red-500">{title}</h3>
-          <p className="text-gray-400">{job?.created_by?.company_profile?.name}</p>
-        </div>
-        <div className="flex items-center">
-          <div className="bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center mr-2">
-            <span className="text-xs">A</span>
+      <div>
+          <Image
+            // src={created_by?.company_profile?.logo}
+            src={
+              "https://res.cloudinary.com/dtx792i8k/image/upload/v1741375193/ProducemartV2/ProductImages/ZA/nywzcdihl3fkfkuegcao.jpg"
+            }
+            alt=""
+            className="h-full object-cover"
+            width={100}
+            height={100}
+          />
+        <div className="flex items-start justify-between mb-4">
+          <div>
+            <h3 className="text-lg font-medium text-red-500">{title}</h3>
+            <p className="text-gray-400">{created_by?.company_profile?.name}</p>
           </div>
-          <span className="text-white">
-            {reward} {currency}
-          </span>
+          <div className="flex items-center">
+            <div className="bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center mr-2">
+              <span className="text-xs">{currency}A</span>
+            </div>
+            <span className="text-white">{total_budget}</span>
+          </div>
         </div>
-      </div>
 
-      <div className="flex items-center space-x-4">
-        <div className="flex items-center text-sm text-gray-400">
-          <BriefcaseBusiness color="#9F9FA9" className="w-3 h-3 mr-1" />
-          Jobs
-        </div>
-        <div className="flex items-center text-sm text-gray-400">
-          <Hourglass color="#9F9FA9" className="w-3 h-3 mr-1" />
-          {duration}
-        </div>
-        <div className="flex items-center text-sm text-gray-400">
-          <FileText color="#9F9FA9" className="w-3 h-3 mr-1" />
-          {proposals} Proposals
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center text-sm text-gray-400">
+            <BriefcaseBusiness color="#9F9FA9" className="w-3 h-3 mr-1" />
+            Jobs
+          </div>
+          <div className="flex items-center text-sm text-gray-400">
+            <Hourglass color="#9F9FA9" className="w-3 h-3 mr-1" />
+            Due in {getTimeLeft(end_date)}
+          </div>
+          <div className="flex items-center text-sm text-gray-400">
+            <FileText color="#9F9FA9" className="w-3 h-3 mr-1" />
+            {proposals} Proposals
+          </div>
         </div>
       </div>
 
       <div className="mt-4 grid grid-cols-8 gap-2">
-        {job?.skills?.map((skill, index) => (
+        {skills?.map((skill, index) => (
           <div key={index}>
             <Outline label={skill.name} />
           </div>
@@ -443,17 +371,17 @@ const JobCard = ({
 // BountyCard
 const BountyCard = ({
   bounty,
-}: {
-  bounty: {
-    id: number;
-    title: string;
-    company: string;
-    duration: string;
-    proposals: number;
-    reward: { usdc: number; xp: number };
-  };
-}) => {
-  const { id, title, company, duration, proposals, reward } = bounty;
+}: IBountyDataType) => {
+  const {
+    id,
+    title,
+    created_by,
+    total_budget,
+    end_date,
+    proposals,
+    currency,
+    skills,
+  } = bounty;
   const router = useRouter();
 
   const goToDetailsPage = () => {
@@ -468,20 +396,20 @@ const BountyCard = ({
       <div className="flex items-start justify-between mb-4">
         <div>
           <h3 className="text-lg font-medium text-red-500">{title}</h3>
-          <p className="text-gray-400">{company}</p>
+          <p className="text-gray-400">{created_by?.company_profile?.name}</p>
         </div>
         <div className="flex flex-col items-end">
           <div className="flex items-center mb-1">
             <div className="bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center mr-2">
               <span className="text-xs">A</span>
             </div>
-            <span className="text-white">{reward.usdc} USDC</span>
+            <span className="text-white">{total_budget} USDC</span>
           </div>
           <div className="flex items-center">
             <div className="bg-red-500 rounded-full w-6 h-6 flex items-center justify-center mr-2">
               <span className="text-xs">XP</span>
             </div>
-            <span className="text-white">{reward.xp} XP</span>
+            <span className="text-white">{100} XP</span>
           </div>
         </div>
       </div>
@@ -493,7 +421,7 @@ const BountyCard = ({
         </div>
         <div className="flex items-center text-sm text-gray-400">
           <Hourglass color="#9F9FA9" className="w-3 h-3 mr-1" />
-          {duration}
+          {end_date}
         </div>
         <div className="flex items-center text-sm text-gray-400">
           <FileText color="#9F9FA9" className="w-3 h-3 mr-1" />
@@ -502,11 +430,10 @@ const BountyCard = ({
       </div>
 
       <div className="mt-4 grid grid-cols-7 gap-2">
-        {Array(5)
-          .fill(0)
-          .map((_, index) => (
+        {
+          skills.map((skill, index) => (
             <div key={index}>
-              <Outline label="Outline" />
+              <Outline label={skill} />
             </div>
           ))}
       </div>
@@ -637,17 +564,17 @@ const MainContent = () => {
     console.log(opportunityData);
 
     if (type === "jobs") {
-      return opportunityData?.filter((item) => item.type === "JOB");
+      return opportunityData?.filter((item: { type: string; }) => item.type === "JOB");
     } else if (type === "bounties") {
-      return opportunityData?.filter((item) => item.type === "BOUNTY");
+      return opportunityData?.filter((item: { type: string; }) => item.type === "BOUNTY");
     }
     return opportunityData;
   };
 
   const filteredOpportunities = getFilteredOpportunities();
-  const jobs = filteredOpportunities.filter((item) => item.type === "JOB");
+  const jobs = filteredOpportunities.filter((item: { type: string; }) => item.type === "JOB");
   const bounties = filteredOpportunities.filter(
-    (item) => item.type === "BOUNTY"
+    (item: { type: string; }) => item.type === "BOUNTY"
   );
 
   const renderContent = () => {
