@@ -68,7 +68,9 @@ export const useCheckUsernameAvailabilityMutation = () => {
           username,
         }
       );
-      return res.data;
+      return res.data.data as {
+        is_available: boolean;
+      };
     },
     onError: (err) => errorMsg(err),
   });
@@ -84,7 +86,9 @@ export const useCheckCompanyUsernameAvailabilityMutation = () => {
           username,
         }
       );
-      return res.data;
+      return res.data.data as {
+        is_available: boolean;
+      };
     },
     onError: (err) => errorMsg(err),
   });
@@ -94,7 +98,7 @@ export const useFetchAllSkills = () => {
   return useQuery({
     queryKey: ["skills"],
     queryFn: async () => {
-      const res = await axios.get(`${API_DEV}/users/skills`);
+      const res = await axios.get(`${API_DEV}/skill`);
       return res.data.data as ISkillsResponse[];
     },
     staleTime: Infinity,
