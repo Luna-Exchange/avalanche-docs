@@ -21,7 +21,6 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { AuthModal } from "@/components/ambassador-dao/sections/auth-modal";
 import { Outline } from "@/components/ambassador-dao/ui/Outline";
 import { useFetchOpportunity } from "@/services/ambassador-dao/requests/opportunity";
-import Loader from "@/components/ambassador-dao/ui/Loader";
 
 interface FilterDropdownProps {
   label: string;
@@ -624,34 +623,6 @@ const GoBackButton = () => {
     </p>
   );
 };
-
-// const MainContent = () => {
-//   const searchParams = useSearchParams();
-//   const type = searchParams.get("type");
-//   const [openAuthModal, setOpenAuthModal] = useState(false);
-
-//   const { data: opportunityData, isLoading } = useFetchOpportunity();
-
-//   console.log(opportunityData)
-
-//   const renderContent = () => {
-//     if (!type) {
-//       return (
-//         <>
-//           <JobsSection />
-//           <BountiesSection />
-//         </>
-//       );
-//     }
-
-//     if (type === "jobs") {
-//       return <JobsSection />;
-//     }
-
-//     if (type === "bounties") {
-//       return <BountiesSection />;
-//     }
-//   };
 
 const MainContent = () => {
   const searchParams = useSearchParams();
