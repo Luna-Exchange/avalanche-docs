@@ -20,6 +20,8 @@ import {
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { AuthModal } from "@/components/ambassador-dao/sections/auth-modal";
 import { Outline } from "@/components/ambassador-dao/ui/Outline";
+import { useFetchOpportunity } from "@/services/ambassador-dao/requests/opportunity";
+import Loader from "@/components/ambassador-dao/ui/Loader";
 
 interface FilterDropdownProps {
   label: string;
@@ -54,9 +56,10 @@ const WelcomeSection = () => {
     </div>
   );
 };
-
 // JobsSection
-const JobsSection = () => {
+const JobsSection = ({ data }: { data: any }) => {
+  console.log(data);
+
   const [filters, setFilters] = useState({
     industry: "",
     skillSet: "",
@@ -139,7 +142,7 @@ const JobsSection = () => {
       </div>
 
       <div className="space-y-4">
-        {jobs.map((job) => (
+        {data.map((job) => (
           <JobCard key={job.id} job={job} />
         ))}
       </div>
@@ -176,7 +179,7 @@ const ViewAllButton = ({ type }: { type: string }) => {
 };
 
 // BountiesSection
-const BountiesSection = () => {
+const BountiesSection = ({ data }: { data: any }) => {
   const [filters, setFilters] = useState({
     industry: "",
     skillSet: "",
@@ -265,7 +268,7 @@ const BountiesSection = () => {
       </div>
 
       <div className="space-y-4">
-        {bounties.map((bounty) => (
+        {data?.map((bounty) => (
           <BountyCard key={bounty.id} bounty={bounty} />
         ))}
       </div>
@@ -400,7 +403,7 @@ const JobCard = ({
       <div className="flex items-start justify-between mb-4">
         <div>
           <h3 className="text-lg font-medium text-red-500">{title}</h3>
-          <p className="text-gray-400">{company}</p>
+          <p className="text-gray-400">{job?.created_by?.company_profile?.name}</p>
         </div>
         <div className="flex items-center">
           <div className="bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center mr-2">
@@ -428,13 +431,11 @@ const JobCard = ({
       </div>
 
       <div className="mt-4 grid grid-cols-8 gap-2">
-        {Array(5)
-          .fill(0)
-          .map((_, index) => (
-            <div key={index}>
-            <Outline label="Outline" />
+        {job?.skills?.map((skill, index) => (
+          <div key={index}>
+            <Outline label={skill.name} />
           </div>
-          ))}
+        ))}
       </div>
     </div>
   );
@@ -624,30 +625,84 @@ const GoBackButton = () => {
   );
 };
 
+// const MainContent = () => {
+//   const searchParams = useSearchParams();
+//   const type = searchParams.get("type");
+//   const [openAuthModal, setOpenAuthModal] = useState(false);
+
+//   const { data: opportunityData, isLoading } = useFetchOpportunity();
+
+//   console.log(opportunityData)
+
+//   const renderContent = () => {
+//     if (!type) {
+//       return (
+//         <>
+//           <JobsSection />
+//           <BountiesSection />
+//         </>
+//       );
+//     }
+
+//     if (type === "jobs") {
+//       return <JobsSection />;
+//     }
+
+//     if (type === "bounties") {
+//       return <BountiesSection />;
+//     }
+//   };
+
 const MainContent = () => {
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
   const [openAuthModal, setOpenAuthModal] = useState(false);
 
+  const { data: opportunityData, isLoading } = useFetchOpportunity();
+
+  // Filter opportunities based on type
+  const getFilteredOpportunities = () => {
+    if (!opportunityData) return [];
+    console.log(opportunityData);
+
+    if (type === "jobs") {
+      return opportunityData?.filter((item) => item.type === "JOB");
+    } else if (type === "bounties") {
+      return opportunityData?.filter((item) => item.type === "BOUNTY");
+    }
+    return opportunityData;
+  };
+
+  const filteredOpportunities = getFilteredOpportunities();
+  const jobs = filteredOpportunities.filter((item) => item.type === "JOB");
+  const bounties = filteredOpportunities.filter(
+    (item) => item.type === "BOUNTY"
+  );
+
   const renderContent = () => {
+    if (isLoading) {
+      return <Loader />;
+    }
+
     if (!type) {
       return (
         <>
-          <JobsSection />
-          <BountiesSection />
+          <JobsSection data={jobs} />
+          <BountiesSection data={bounties} />
         </>
       );
     }
 
     if (type === "jobs") {
-      return <JobsSection />;
+      return <JobsSection data={jobs} />;
     }
 
     if (type === "bounties") {
-      return <BountiesSection />;
+      return <BountiesSection data={bounties} />;
     }
   };
 
+  // console.log(opportunityData, filteredOpportunities, jobs)
   return (
     <>
       <GoBackButton />
