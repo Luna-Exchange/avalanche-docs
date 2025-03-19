@@ -3,22 +3,21 @@
 import { SetStateAction } from "react";
 import { Search } from "lucide-react";
 import EmptyState from "../ui/EmptyState";
-import { statusOptions } from "../constants";
+import { jobTypes, minBudget, statusOptions } from "../constants";
 import { useFetchAllSkills } from "@/services/ambassador-dao/requests/onboard";
 import { ViewAllButton } from "./ViewAllButton";
 import { FilterDropdown } from "./FilterDropdown";
 import { JobCard } from "./JobCard";
-
 
 interface JobsSectionProps {
   data: any[];
   filters: {
     type: string;
     query: string;
-    industry: string;
-    skillSet: string;
-    jobType: string;
+    min_budget: string;
+    category: string;
     status: string;
+    skillSet: string;
   };
   searchInput: string;
   handleSearchChange: (e: {
@@ -36,7 +35,21 @@ const JobsSection = ({
 }: JobsSectionProps) => {
   const { data: skills } = useFetchAllSkills();
 
-  console.log(skills);
+  const clearAllFilters = () => {
+    updateFilters({
+      query: "",
+      min_budget: "",
+      skillSet: "",
+      category: "",
+      status: "",
+    });
+    if (handleSearchChange) {
+      const resetEvent = {
+        target: { value: "" },
+      };
+      handleSearchChange(resetEvent);
+    }
+  };
 
   return (
     <section className="mb-12 border border-[#27272A] rounded-md py-14 px-8">
@@ -47,6 +60,20 @@ const JobsSection = ({
           options={skills}
           value={filters.skillSet}
           onValueChange={(value) => updateFilters({ skillSet: value })}
+        />
+
+        <FilterDropdown
+          label="Job Type"
+          options={jobTypes}
+          value={filters.category}
+          onValueChange={(value) => updateFilters({ category: value })}
+        />
+
+        <FilterDropdown
+          label="Min Budget"
+          options={minBudget}
+          value={filters.min_budget}
+          onValueChange={(value) => updateFilters({ status: value })}
         />
         <FilterDropdown
           label="Status"
@@ -66,6 +93,18 @@ const JobsSection = ({
             <Search color="#9F9FA9" className="h-3 w-3 sm:w-5 sm:h-5" />
           </button>
         </div>
+        {(filters.query ||
+          filters.category ||
+          filters.skillSet ||
+          filters.min_budget ||
+          filters.status) && (
+          <span
+            className="underline flex cursor-pointer text-red-500 ml-auto items-center"
+            onClick={clearAllFilters}
+          >
+            Clear filters
+          </span>
+        )}
       </div>
 
       <div className="space-y-4">

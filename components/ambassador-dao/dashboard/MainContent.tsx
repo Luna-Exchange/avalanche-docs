@@ -21,19 +21,19 @@ const MainContent = () => {
   const [jobFilters, setJobFilters] = useState({
     type: "JOB",
     query: searchParams.get("job_query") || "",
-    industry: searchParams.get("job_industry") || "",
     skillSet: searchParams.get("job_skillSet") || "",
     jobType: searchParams.get("job_jobType") || "",
+    min_budget: searchParams.get("job_min_budget") || "",
+    category: searchParams.get("job_category") || "",
     status: searchParams.get("job_status") || "",
   });
 
   const [bountyFilters, setBountyFilters] = useState({
     type: "BOUNTY",
     query: searchParams.get("bounty_query") || "",
-    industry: searchParams.get("bounty_industry") || "",
     skillSet: searchParams.get("bounty_skillSet") || "",
-    deadline: searchParams.get("bounty_deadline") || "",
-    reward: searchParams.get("bounty_reward") || "",
+    min_budget: searchParams.get("bounty_min_budget") || "",
+    category: searchParams.get("bounty_category") || "",
     status: searchParams.get("bounty_status") || "",
   });
 
@@ -61,24 +61,24 @@ const MainContent = () => {
 
   useEffect(() => {
     const newJobFilters = {
-      type: "JOB",
-      query: searchParams.get("job_query") || "",
-      industry: searchParams.get("job_industry") || "",
-      skillSet: searchParams.get("job_skillSet") || "",
-      jobType: searchParams.get("job_jobType") || "",
-      status: searchParams.get("job_status") || "",
+        type: "JOB",
+        query: searchParams.get("job_query") || "",
+        skillSet: searchParams.get("job_skillSet") || "",
+        jobType: searchParams.get("job_jobType") || "",
+        min_budget: searchParams.get("job_min_budget") || "",
+        category: searchParams.get("job_category") || "",
+        status: searchParams.get("job_status") || "",
     };
 
     setJobFilters(newJobFilters);
 
     const newBountyFilters = {
-      type: "BOUNTY",
-      query: searchParams.get("bounty_query") || "",
-      industry: searchParams.get("bounty_industry") || "",
-      skillSet: searchParams.get("bounty_skillSet") || "",
-      deadline: searchParams.get("bounty_deadline") || "",
-      reward: searchParams.get("bounty_reward") || "",
-      status: searchParams.get("bounty_status") || ""
+        type: "BOUNTY",
+        query: searchParams.get("bounty_query") || "",
+        skillSet: searchParams.get("bounty_skillSet") || "",
+        min_budget: searchParams.get("bounty_min_budget") || "",
+        category: searchParams.get("bounty_category") || "",
+        status: searchParams.get("bounty_status") || "",
     };
 
     setBountyFilters(newBountyFilters);

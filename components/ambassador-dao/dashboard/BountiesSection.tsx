@@ -3,7 +3,7 @@
 import { SetStateAction } from "react";
 import { Search } from "lucide-react";
 import EmptyState from "../ui/EmptyState";
-import { statusOptions } from "../constants";
+import { jobTypes, minBudget, statusOptions } from "../constants";
 import { useFetchAllSkills } from "@/services/ambassador-dao/requests/onboard";
 import { ViewAllButton } from "./ViewAllButton";
 import { FilterDropdown } from "./FilterDropdown";
@@ -15,10 +15,9 @@ interface BountiesSectionProps {
   filters: {
     type: string;
     query: string;
-    industry: string;
+    category: string;
     skillSet: string;
-    deadline: string;
-    reward: string;
+    min_budget: string;
     status: string;
   };
   searchInput: string;
@@ -35,10 +34,25 @@ const BountiesSection = ({
   handleSearchChange,
   updateFilters,
 }: BountiesSectionProps) => {
+
   const { data: skills } = useFetchAllSkills();
 
+  const clearAllFilters = () => {
+    updateFilters({
+      query: "",
+      industry: "",
+      skillSet: "",
+      category: "",
+      status: ""
+    });
+    if (handleSearchChange) {
+      const resetEvent = {
+        target: { value: "" }
+      };
+      handleSearchChange(resetEvent);
+    }
+  };
 
-  console.log(filters.type)
   return (
     <section className="border border-[#27272A] rounded-md py-14 px-8">
       <h2 className="text-3xl font-bold mb-6">ALL BOUNTIES</h2>
@@ -51,11 +65,25 @@ const BountiesSection = ({
         />
 
         <FilterDropdown
+          label="Bounty Type"
+          options={jobTypes}
+          value={filters.category}
+          onValueChange={(value) => updateFilters({ category: value })}
+        />
+
+        <FilterDropdown
+          label="Min Budget"
+          options={minBudget}
+          value={filters.min_budget}
+          onValueChange={(value) => updateFilters({ status: value })}
+        />
+
+        <FilterDropdown
           label="Status"
           options={statusOptions}
           value={filters.status}
           onValueChange={(value) => updateFilters({ status: value })}
-        />
+        />  
 
         {/* Search input */}
         <div className="relative min-w-[200px]">
@@ -70,6 +98,14 @@ const BountiesSection = ({
             <Search color="#9F9FA9" className="h-3 w-3 sm:w-5 sm:h-5" />
           </button>
         </div>
+        {(filters.query || filters.category || filters.skillSet || filters.min_budget || filters.status) && (
+          <span 
+            className="underline flex cursor-pointer text-red-500 ml-auto items-center" 
+            onClick={clearAllFilters}
+          >
+            Clear filters
+          </span>
+        )}
       </div>
 
       <div className="space-y-4">
