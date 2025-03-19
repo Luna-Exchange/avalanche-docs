@@ -6,12 +6,12 @@ import { useFetchOpportunity } from "@/services/ambassador-dao/requests/opportun
 import Loader from "@/components/ambassador-dao/ui/Loader";
 import { useDebounce } from "@/components/ambassador-dao/hooks/useDebounce";
 import { AuthModal } from "../sections/auth-modal";
-import { SideContent } from "./SideContent";
 import JobsSection from "./JobSection";
 import BountiesSection from "./BountiesSection";
 import { GoBackButton } from "./BackButton";
+import SideContent from "./SideContent";
 
-const MainContent = () => {
+const MainContent = ({user}: {user: any}) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -234,7 +234,7 @@ const MainContent = () => {
           {renderContent()}
         </div>
         <div className="order-1 xl:order-2 col-span-3">
-          <SideContent setOpenAuthModal={setOpenAuthModal} />
+          <SideContent user={user} setOpenAuthModal={setOpenAuthModal} />
         </div>
       </div>
       <AuthModal

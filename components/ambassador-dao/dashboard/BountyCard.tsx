@@ -5,6 +5,7 @@ import Image from "next/image";
 import Team1 from "@/public/ambassador-dao-images/Avalanche-team1.png";
 import { useRouter } from "next/navigation";
 import { Outline } from "../ui/Outline";
+import { useCountdown } from "../hooks/useCountdown";
 
 export const BountyCard = ({ bounty }: IBountyDataType) => {
     const {
@@ -18,6 +19,9 @@ export const BountyCard = ({ bounty }: IBountyDataType) => {
       skills,
     } = bounty;
     const router = useRouter();
+
+    const timeLeft = useCountdown(end_date);
+
   
     const goToDetailsPage = () => {
       router.push(`/ambassador-dao/bounty/${id}`);
@@ -44,14 +48,14 @@ export const BountyCard = ({ bounty }: IBountyDataType) => {
                   <p className="text-gray-400">
                     {created_by?.company_profile?.name}
                   </p>
-                  <div className="flex items-center space-x-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center space-x-4">
                     <div className="flex items-center text-sm text-gray-400">
                       <Lightbulb color="#9F9FA9" className="w-3 h-3 mr-1" />
                       Bounty
                     </div>
                     <div className="flex items-center text-sm text-gray-400">
                       <Hourglass color="#9F9FA9" className="w-3 h-3 mr-1" />
-                      Due in {getTimeLeft(end_date)}
+                      Due in {timeLeft}
                     </div>
                     <div className="flex items-center text-sm text-gray-400">
                       <FileText color="#9F9FA9" className="w-3 h-3 mr-1" />

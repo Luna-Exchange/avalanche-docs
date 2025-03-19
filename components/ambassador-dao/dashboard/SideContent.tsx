@@ -1,12 +1,10 @@
 import { ArrowUpRight } from "lucide-react";
-import { Progress } from "../ui/Progress";
 import { useFetchUserDataQuery } from "@/services/ambassador-dao/requests/auth";
-import Link from "next/link";
 
 const UserProfileCard = ({userData}: any) => {
     return (
       <div className="shadow-sm border border-[#27272A] rounded-lg p-4 mb-6">
-        <div className="flex items-center mb-4">
+        <div className="flex items-center">
           <div className="w-10 h-10 rounded-full bg-gray-600 mr-3 flex items-center justify-center">
             <span className="text-white">DA</span>
           </div>
@@ -20,12 +18,6 @@ const UserProfileCard = ({userData}: any) => {
             </span>
           </div>
         </div>
-        <div className="w-full bg-gray-700 h-2 rounded-full overflow-hidden">
-          <Progress value={60} className="" />
-        </div>
-        <Link href="/ambassador-dao/onboard" className="text-xs text-gray-400 mt-1 underline cursor-pointer">
-          Complete your profile
-        </Link>
       </div>
     );
   };
@@ -57,20 +49,24 @@ const AmbassadorCard = ({
 
 
 
-export const SideContent = ({
+const SideContent = ({
+    user,
     setOpenAuthModal,
   }: {
+    user: any,
     setOpenAuthModal: React.Dispatch<React.SetStateAction<boolean>>;
   }) => {
 
-  const { data: user, isLoading } = useFetchUserDataQuery();
+//   const { data: user } = useFetchUserDataQuery();
 
-  console.log(user, isLoading)
+
     return (
       <div className="lg:col-span-1">
         {!user && <AmbassadorCard setOpenAuthModal={setOpenAuthModal} />}
         {user && <UserProfileCard userData={user} />}
-        {/* <PreferenceSection /> */}
       </div>
     );
   };
+
+
+  export default SideContent;

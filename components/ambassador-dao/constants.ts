@@ -4,14 +4,9 @@ export const statusOptions = [
     {id: "COMPLETED", label: "Completed"},
 ]
 
-export const skillsetOptions = [
-    {id: "1", label: "Skill1"},
-    {id: "2", label: "Skill2"},
-    {id: "3", label: "Skill3"},
-]
 
 export const jobTypes = [
-    {id: "PUBLIC", label: "Public"},
+    {id: "PUBLIC", label: "All"},
     {id: "AMBASSADOR", label: "Ambassador"},
 ]
 

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { IJobDataType } from "@/services/ambassador-dao/interfaces/opportunity";
 import { Outline } from "../ui/Outline";
 import { getTimeLeft } from "@/utils/timeFormatting";
+import { useCountdown } from "../hooks/useCountdown";
 
 
 export const JobCard = ({ job }: IJobDataType) => {
@@ -20,6 +21,9 @@ export const JobCard = ({ job }: IJobDataType) => {
     } = job;
   
     const router = useRouter();
+
+
+    const timeLeft = useCountdown(end_date);
   
     const goToDetailsPage = () => {
       router.push(`/ambassador-dao/jobs/${id}`);
@@ -46,7 +50,7 @@ export const JobCard = ({ job }: IJobDataType) => {
                   <p className="text-gray-400">
                     {created_by?.company_profile?.name}
                   </p>
-                  <div className="flex items-center space-x-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center space-x-4">
                     <div className="flex items-center text-sm text-gray-400">
                       <BriefcaseBusiness
                         color="#9F9FA9"
@@ -56,7 +60,7 @@ export const JobCard = ({ job }: IJobDataType) => {
                     </div>
                     <div className="flex items-center text-sm text-gray-400">
                       <Hourglass color="#9F9FA9" className="w-3 h-3 mr-1" />
-                      Due in {getTimeLeft(end_date)}
+                      Due in {timeLeft}
                     </div>
                     <div className="flex items-center text-sm text-gray-400">
                       <FileText color="#9F9FA9" className="w-3 h-3 mr-1" />
