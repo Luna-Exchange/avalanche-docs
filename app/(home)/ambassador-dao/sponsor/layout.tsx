@@ -1,3 +1,5 @@
+"use client"
+
 import FullScreenLoader from "@/components/ambassador-dao/full-screen-loader";
 import { useFetchUserDataQuery } from "@/services/ambassador-dao/requests/auth";
 import { useRouter } from "next/navigation";
