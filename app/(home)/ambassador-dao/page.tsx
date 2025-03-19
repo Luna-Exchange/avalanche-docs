@@ -5,20 +5,7 @@ import { Suspense } from "react";
 import Team1 from "@/public/ambassador-dao-images/Avalanche-team1.png";
 
 import React from "react";
-import {
-  ArrowLeft,
-  BriefcaseBusiness,
-  FileText,
-  Hourglass,
-  Lightbulb,
-} from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Outline } from "@/components/ambassador-dao/ui/Outline";
-import { getTimeLeft } from "@/utils/timeFormatting";
-import {
-  IBountyDataType,
-  IJobDataType,
-} from "@/services/ambassador-dao/interfaces/opportunity";
+
 import MainContent from "@/components/ambassador-dao/dashboard/MainContent";
 import { useFetchUserDataQuery } from "@/services/ambassador-dao/requests/auth";
 

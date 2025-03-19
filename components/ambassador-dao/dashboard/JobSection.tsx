@@ -73,7 +73,7 @@ const JobsSection = ({
           label="Min Budget"
           options={minBudget}
           value={filters.min_budget}
-          onValueChange={(value) => updateFilters({ status: value })}
+          onValueChange={(value) => updateFilters({ min_budget: value })}
         />
         <FilterDropdown
           label="Status"
