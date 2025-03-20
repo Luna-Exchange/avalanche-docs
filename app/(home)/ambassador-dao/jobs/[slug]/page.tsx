@@ -329,16 +329,39 @@ const AmbasssadorDaoSingleJobPage = () => {
   }
 
   return (
+    // <div className="text-white min-h-screen">
+    //   <div className="max-w-7xl mx-auto px-4 py-8 border border-[#27272A] rounded-lg shadow-sm my-6">
+    //     <GoBackButton />
+    //     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    //       <div className="md:col-span-2">
+    //         <JobHeader job={headerData} />
+    //         <JobDescription data={extractDescriptionData(data)}  />
+    //         <CommentsSection comments={mockComments} />
+    //       </div>
+    //       <div className="md:col-span-1">
+    //         <JobSidebar job={sidebarData} />
+    //       </div>
+    //     </div>
+    //   </div>
+    // </div>
+
     <div className="text-white min-h-screen">
       <div className="max-w-7xl mx-auto px-4 py-8 border border-[#27272A] rounded-lg shadow-sm my-6">
         <GoBackButton />
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="md:col-span-2">
+          <div className="md:col-span-2 flex flex-col">
             <JobHeader job={headerData} />
-            <JobDescription data={extractDescriptionData(data)}  />
+
+            <div className="block md:hidden my-6">
+              <JobSidebar job={sidebarData} />
+            </div>
+
+            <JobDescription data={extractDescriptionData(data)} />
             <CommentsSection comments={mockComments} />
           </div>
-          <div className="md:col-span-1">
+
+          <div className="hidden md:block md:col-span-1">
             <JobSidebar job={sidebarData} />
           </div>
         </div>
