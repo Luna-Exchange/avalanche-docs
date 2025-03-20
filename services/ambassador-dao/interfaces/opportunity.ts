@@ -47,3 +47,13 @@ export interface IJobDataType {
       }]
     };
   }
+
+
+  export interface IJobApplicationBody {
+
+  }
+
+  export interface IBountySubmissionBody {
+  
+  
+  }
