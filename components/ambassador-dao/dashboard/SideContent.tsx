@@ -34,7 +34,7 @@ const AmbassadorCard = ({
         onClick={() => setOpenAuthModal(true)}
       >
         <div className="relative z-10">
-          <h3 className="font-medium mb-1">Become a Ambassador</h3>
+          <h3 className="font-medium mb-1">Become an Ambassador</h3>
           <p className="text-xs opacity-80">
             Reach 70,000+ crypto talent from one single dashboard
           </p>
