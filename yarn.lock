@@ -3974,6 +3974,22 @@ fumadocs-core@15.0.15:
     shiki "^3.1.0"
     unist-util-visit "^5.0.0"
 
+fumadocs-mdx@^11.5.7:
+  version "11.5.7"
+  resolved "https://registry.yarnpkg.com/fumadocs-mdx/-/fumadocs-mdx-11.5.7.tgz#45c4945f21df1cf192893f352253304af531727f"
+  integrity sha512-gH/C/rkqPfp27lrBNBtca5lT89jtQ/aIt8TD5iOChHnlFT0Lzt70ZGt/fpoAS/rOAhPBUMxFzKtQh6bQWppUoA==
+  dependencies:
+    "@mdx-js/mdx" "^3.1.0"
+    "@standard-schema/spec" "^1.0.0"
+    chokidar "^4.0.3"
+    cross-spawn "^7.0.6"
+    esbuild "^0.25.0"
+    estree-util-value-to-estree "^3.3.2"
+    fast-glob "^3.3.3"
+    gray-matter "^4.0.3"
+    unist-util-visit "^5.0.0"
+    zod "^3.24.2"
+
 fumadocs-twoslash@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/fumadocs-twoslash/-/fumadocs-twoslash-3.1.0.tgz#03c6b406362b3f2785de0092818912869f21ad8b"
