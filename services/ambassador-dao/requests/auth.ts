@@ -121,7 +121,7 @@ export const useFetchUserDataQuery = () => {
   return useQuery({
     queryFn: async () => {
       const res = await axios.get(`${API_DEV}/users/me`);
-      return res.data.data as IUserDetails;
+      return res.data.data;
     },
     queryKey: ["fetchUserProfile"],
     staleTime: Infinity,
@@ -140,7 +140,7 @@ export const useFetchUserStatsDataQuery = (
     queryKey: ["fetchUserStats"],
     staleTime: Infinity,
     refetchOnWindowFocus: false,
-    enabled: false,
+    enabled: !!username,
   });
 };
 
