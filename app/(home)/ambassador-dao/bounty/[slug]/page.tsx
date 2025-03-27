@@ -34,7 +34,6 @@ import Loader from "@/components/ambassador-dao/ui/Loader";
 import { Pagination } from "@/components/ambassador-dao/ui/Pagination";
 import { BountySubmissionModal } from "@/components/ambassador-dao/bounty/BountySubmissionModal";
 import { AuthModal } from "@/components/ambassador-dao/sections/auth-modal";
-import { time } from "console";
 
 interface CommentAuthor {
   id: string;
@@ -1038,7 +1037,6 @@ const AmbasssadorDaoSingleBountyPage = () => {
             </div>
 
             <BountyDescription data={extractDescriptionData(data)} />
-
             <CommentsSection id={slug} />
           </div>
 
