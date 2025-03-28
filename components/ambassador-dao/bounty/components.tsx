@@ -212,6 +212,7 @@ export const BountySidebar: React.FC<BountySidebarProps> = ({
             : "bg-red-500 hover:bg-red-600 text-white"
         }`}
         onClick={() => {
+          if (nullAction) return;
           userData && !data?.has_submitted && timeLeft !== "Expired"
             ? setIsModalOpen(true)
             : !userData && setOpenAuthModal(true);
