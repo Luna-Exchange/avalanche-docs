@@ -126,33 +126,6 @@ export const JobSidebar: React.FC<JobSidebarProps> = ({ job, nullAction }) => {
           <div>No skills available</div>
         )}
       </div>
-
-      <button
-        disabled={data?.has_applied || timeLeft === "Expired"}
-        className={`w-full font-medium py-3 rounded-md transition ${
-          data?.has_applied || timeLeft === "Expired"
-            ? "bg-gray-400 text-white cursor-not-allowed"
-            : "bg-red-500 hover:bg-red-600 text-white"
-        }`}
-        onClick={() => {
-          if (nullAction) return;
-          userData && !data?.has_applied && timeLeft !== "Expired"
-            ? setIsModalOpen(true)
-            : !userData && setOpenAuthModal(true);
-        }}
-      >
-        {isLoading ? (
-          <Loader2 color='#FFF' />
-        ) : data?.has_applied ? (
-          "Already Applied"
-        ) : timeLeft === "Expired" ? (
-          "Expired"
-        ) : (
-          "APPLY"
-        )}
-      </button>
-
-
       {job.category === "AMBASSADOR_SPECIFIC" && userData?.role !== "AMBASSADOR" ? null : <button
         disabled={data?.has_applied || timeLeft === "Expired"}
         className={`w-full font-medium py-3 rounded-md transition ${

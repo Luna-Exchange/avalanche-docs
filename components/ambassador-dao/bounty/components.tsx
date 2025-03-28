@@ -204,31 +204,6 @@ export const BountySidebar: React.FC<BountySidebarProps> = ({
         )}
       </div>
 
-      {/* <button
-        disabled={data?.has_submitted || timeLeft === "Expired"}
-        className={`w-full font-medium py-3 rounded-md transition ${
-          data?.has_submitted || timeLeft === "Expired"
-            ? "bg-gray-400 text-white cursor-not-allowed"
-            : "bg-red-500 hover:bg-red-600 text-white"
-        }`}
-        onClick={() => {
-          if (nullAction) return;
-          userData && !data?.has_submitted && timeLeft !== "Expired"
-            ? setIsModalOpen(true)
-            : !userData && setOpenAuthModal(true);
-        }}
-      >
-        {isLoading ? (
-          <Loader2 color='#FFF' />
-        ) : data?.has_submitted ? (
-          "Already Submitted"
-        ) : timeLeft === "Expired" ? (
-          "Expired"
-        ) : (
-          "Participate"
-        )}
-      </button> */}
-
 {bounty.category === "AMBASSADOR_SPECIFIC" && userData?.role !== "AMBASSADOR" ? null : <button
         disabled={data?.has_submitted || timeLeft === "Expired"}
         className={`w-full font-medium py-3 rounded-md transition ${
