@@ -91,6 +91,7 @@ interface CommentProps {
 interface BountySidebarProps {
   bounty: {
     id: string;
+    category: string;
     total_budget: number;
     deadline: string;
     proposalsCount: number;
@@ -111,6 +112,7 @@ const BountySidebar: React.FC<BountySidebarProps> = ({ bounty }) => {
   const { data, isLoading } = useCheckBountyStatus(bounty.id);
   const { data: userData } = useFetchUserDataQuery();
 
+  console.log(userData, bounty)
   return (
     <div className="bg-[#111] p-4 rounded-md border border-gray-800 sticky top-6">
       <div className="flex items-center justify-between mb-4">
@@ -171,7 +173,7 @@ const BountySidebar: React.FC<BountySidebarProps> = ({ bounty }) => {
         )}
       </div>
 
-      <button
+       {bounty.category === "AMBASSADOR_SPECIFIC" && userData?.role !== "AMBASSADOR" ? null : <button
         disabled={data?.has_submitted || timeLeft === "Expired"}
         className={`w-full font-medium py-3 rounded-md transition ${
           data?.has_submitted || timeLeft === "Expired"
@@ -193,7 +195,7 @@ const BountySidebar: React.FC<BountySidebarProps> = ({ bounty }) => {
         ) : (
           "Participate"
         )}
-      </button>
+      </button>}
 
       <AuthModal
         isOpen={openAuthModal}
@@ -1011,6 +1013,7 @@ const AmbasssadorDaoSingleBountyPage = () => {
 
   const sidebarData = {
     id: data?.id,
+    category: data?.category,
     total_budget: data?.total_budget || 0,
     deadline: data?.end_date,
     proposalsCount: data?.max_winners || 0,

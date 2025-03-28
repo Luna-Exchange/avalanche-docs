@@ -91,6 +91,7 @@ interface CommentProps {
 interface JobSidebarProps {
   job: {
     id: string;
+    category: string;
     total_budget: number;
     deadline: string;
     proposalsCount: number;
@@ -171,7 +172,7 @@ const JobSidebar: React.FC<JobSidebarProps> = ({ job }) => {
         )}
       </div>
 
-      <button
+      {job.category === "AMBASSADOR_SPECIFIC" && userData?.role !== "AMBASSADOR" ? null : <button
         disabled={data?.has_applied || timeLeft === "Expired"}
         className={`w-full font-medium py-3 rounded-md transition ${
           data?.has_applied || timeLeft === "Expired"
@@ -193,7 +194,7 @@ const JobSidebar: React.FC<JobSidebarProps> = ({ job }) => {
         ) : (
           "APPLY"
         )}
-      </button>
+      </button>}
 
       <AuthModal
         isOpen={openAuthModal}
@@ -1007,6 +1008,7 @@ const AmbasssadorDaoSingleJobPage = () => {
 
   const sidebarData = {
     id: data?.id,
+    category: data?.category,
     total_budget: data?.total_budget || 0,
     deadline: data?.end_date,
     proposalsCount: data?.max_winners || 0,
