@@ -27,7 +27,6 @@ const AmbasssadorDaoProfilePage = () => {
     const { data: userPendingRewards, isLoading: isLoadingRewards } =
     useFetchUserPendingRewards();
 
-    console.log(userPendingRewards, "projects", isLoadingRewards)
 
     const {data: opportunities, isLoading: isLoadingOpportunities} = useFetchOpportunity({})
 
