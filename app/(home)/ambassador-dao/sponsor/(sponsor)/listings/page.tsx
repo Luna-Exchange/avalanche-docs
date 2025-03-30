@@ -111,7 +111,7 @@ export default function AmbasssadorDaoSponsorsListingsPage() {
         <div className='bg-[#155DFC] rounded-md p-3 md:p-6'>
           <p className='text-[#FAFAFA] text-sm'>Under review</p>
           <p className='text-[#9F9FA9] text-sm font-light'>
-            Lorem ipsum dolor sit amet,consectetur adipiscing elit.{" "}
+            Your account is under review, and will be approved shortly.
           </p>
         </div>
       )}
@@ -123,7 +123,8 @@ export default function AmbasssadorDaoSponsorsListingsPage() {
               Uh oh! Something went wrong.
             </p>
             <p className='text-[#E5E7EB] text-sm font-light'>
-              Review and resubmit your company details for approval
+              Review and resubmit your company details again for approval.
+              (TODO: Allow resubmission after admin rejection)
             </p>
           </div>
           <CustomButton
@@ -311,16 +312,25 @@ export default function AmbasssadorDaoSponsorsListingsPage() {
                                   className='p-1 h-auto'
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    navigator.clipboard.writeText(
-                                      `${
-                                        window.location.origin
-                                      }/ambassador-dao/${
-                                        listing.type === "BOUNTY"
-                                          ? "bounty"
-                                          : "jobs"
-                                      }/${listing.id}`
-                                    );
-                                    toast.success("Link copied to clipboard");
+                                    if (
+                                      listing.status === "DRAFT" ||
+                                      listing.status === "IN_REVIEW"
+                                    ) {
+                                      toast.error(
+                                        "Error: Only published listings link can be copied"
+                                      );
+                                    } else {
+                                      navigator.clipboard.writeText(
+                                        `${
+                                          window.location.origin
+                                        }/ambassador-dao/${
+                                          listing.type === "BOUNTY"
+                                            ? "bounty"
+                                            : "jobs"
+                                        }/${listing.id}`
+                                      );
+                                      toast.success("Link copied to clipboard");
+                                    }
                                   }}
                                 >
                                   <LinkIcon
@@ -386,18 +396,27 @@ export default function AmbasssadorDaoSponsorsListingsPage() {
                                       className='text-white hover:bg-gray-700 cursor-pointer'
                                       onClick={(e) => {
                                         e.stopPropagation();
-                                        navigator.clipboard.writeText(
-                                          `${
-                                            window.location.origin
-                                          }/ambassador-dao/${
-                                            listing.type === "BOUNTY"
-                                              ? "bounty"
-                                              : "jobs"
-                                          }/${listing.id}`
-                                        );
-                                        toast.success(
-                                          "Link copied to clipboard"
-                                        );
+                                        if (
+                                          listing.status === "DRAFT" ||
+                                          listing.status === "IN_REVIEW"
+                                        ) {
+                                          toast.error(
+                                            "Error: Only published listings link can be copied"
+                                          );
+                                        } else {
+                                          navigator.clipboard.writeText(
+                                            `${
+                                              window.location.origin
+                                            }/ambassador-dao/${
+                                              listing.type === "BOUNTY"
+                                                ? "bounty"
+                                                : "jobs"
+                                            }/${listing.id}`
+                                          );
+                                          toast.success(
+                                            "Link copied to clipboard"
+                                          );
+                                        }
                                       }}
                                     >
                                       <LinkIcon
