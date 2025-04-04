@@ -45,7 +45,7 @@ import { PublishOpportunityModal } from "./publish-opportunity-modal";
 const MarkdownEditor = dynamic(() => import("../markdown-editor"), {
   ssr: false,
 });
-const markdown = `Hello **world**!`;
+const markdown = 'Describe your project in detail. What does it do? Who is it for?';
 
 export default function AmbasssadorDaoSponsorsCreateListing({
   type,
@@ -427,8 +427,8 @@ export default function AmbasssadorDaoSponsorsCreateListing({
                         <span className='text-red-500 ml-1'>*</span>
                       </label>
                       <Suspense fallback={null}>
-                        <MarkdownEditor
-                          markdown={getValues("description") ?? markdown}
+                        <MarkdownEditor 
+                          markdown={getValues("description")}
                           setValue={setValue}
                         />
                       </Suspense>
