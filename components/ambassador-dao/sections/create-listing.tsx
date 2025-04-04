@@ -45,7 +45,6 @@ import { PublishOpportunityModal } from "./publish-opportunity-modal";
 const MarkdownEditor = dynamic(() => import("../markdown-editor"), {
   ssr: false,
 });
-const markdown = 'Describe your project in detail. What does it do? Who is it for?';
 
 export default function AmbasssadorDaoSponsorsCreateListing({
   type,
