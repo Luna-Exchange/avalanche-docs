@@ -78,7 +78,7 @@ export default function AmbasssadorDaoSponsorsCreateListing({
       end_date: null,
       requirements: "",
       max_winners: 1,
-      // total_budget: 0,
+      total_budget: 0,
       skill_ids: [],
       file_ids: [],
       custom_questions: [],
@@ -88,7 +88,6 @@ export default function AmbasssadorDaoSponsorsCreateListing({
     },
   });
 
-  // Prize distribution field array for BOUNTY type
   const {
     fields: prizeFields,
     append: appendPrize,
@@ -98,17 +97,14 @@ export default function AmbasssadorDaoSponsorsCreateListing({
     name: "prize_distribution",
   });
 
-  // Watch for form values
   const startDate = watch("start_date");
   const formType = watch("type");
   const customQuestionFields = watch("custom_questions");
 
-  // Set selected skills in form when they change
   useEffect(() => {
     setValue("skill_ids", selectedSkills);
   }, [selectedSkills, setValue]);
 
-  // Populate form with listing details when in edit mode
   useEffect(() => {
     if (id && listingDetails) {
       setValue("title", listingDetails.title);
@@ -213,13 +209,11 @@ export default function AmbasssadorDaoSponsorsCreateListing({
     setSelectedSkills(updated);
   };
 
-  // Function to add a custom question
   const addCustomQuestion = () => {
     const updatedQuestions = [...(customQuestionFields || []), ""];
     setValue("custom_questions", updatedQuestions);
   };
 
-  // Function to remove a custom question
   const removeCustomQuestion = (index: number) => {
     const updatedQuestions = customQuestionFields?.filter(
       (_, i) => i !== index
@@ -227,7 +221,6 @@ export default function AmbasssadorDaoSponsorsCreateListing({
     setValue("custom_questions", updatedQuestions);
   };
 
-  // Helper function to set end date based on weeks from start date
   const setEndDateFromWeeks = (weeks: number) => {
     if (startDate) {
       const newEndDate = addWeeks(new Date(startDate), weeks);
@@ -235,14 +228,12 @@ export default function AmbasssadorDaoSponsorsCreateListing({
     }
   };
 
-  // Calculate total budget for BOUNTY type
   const calculateTotalBudget = () => {
     const prizes = watch("prize_distribution") || [];
     const total = prizes.reduce((sum, prize) => sum + (prize.amount || 0), 0);
     setValue("total_budget", total);
   };
 
-  // Update total budget when prize amounts change
   useEffect(() => {
     const type = watch("type");
     if (type === "BOUNTY") {
@@ -259,7 +250,6 @@ export default function AmbasssadorDaoSponsorsCreateListing({
     }
   }, [watch("type")]);
 
-  // Handle unsaved changes
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (isDirty) {
@@ -340,7 +330,6 @@ export default function AmbasssadorDaoSponsorsCreateListing({
               <form onSubmit={handleSubmit(onSubmitContinue)}>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                   <div className="lg:col-span-2 space-y-6">
-                    {/* Title Section */}
                     <div className="space-y-1">
                       <label className="flex text-[var(--primary-text-color)] text-sm font-medium">
                         Listing Title
@@ -403,7 +392,6 @@ export default function AmbasssadorDaoSponsorsCreateListing({
                       )}
                     </div>
 
-                    {/* Requirements Section */}
                     <div className="space-y-2">
                       <label className="flex text-[var(--primary-text-color)] text-sm font-medium">
                         Requirements
@@ -428,7 +416,6 @@ export default function AmbasssadorDaoSponsorsCreateListing({
                       )}
                     </div>
 
-                    {/* Description Section */}
                     <div className="space-y-2">
                       <label className="flex text-[var(--primary-text-color)] text-sm font-medium">
                         Description
@@ -449,7 +436,6 @@ export default function AmbasssadorDaoSponsorsCreateListing({
                   </div>
 
                   <div className="lg:col-span-1 space-y-6">
-                    {/* Rewards Section - Conditional based on type */}
                     {formType === "JOB" ? (
                       <div className="space-y-1">
                         <label className="flex text-[var(--primary-text-color)] text-sm font-medium">
@@ -494,13 +480,13 @@ export default function AmbasssadorDaoSponsorsCreateListing({
                                 onChange={(e) => {
                                   const inputValue = e.target.value;
                                   if (inputValue === "") {
-                                    field.onChange(""); // Keep it blank
+                                    field.onChange(""); 
                                   } else if (+inputValue === 0) {
-                                    field.onChange(""); // Keep it blank
+                                    field.onChange(""); 
                                   } else {
                                     const numValue = Number(inputValue);
                                     if (numValue < 1) {
-                                      field.onChange(""); // Set to min value if less than 1
+                                      field.onChange(""); 
                                     } else {
                                       field.onChange(numValue);
                                     }
@@ -632,7 +618,6 @@ export default function AmbasssadorDaoSponsorsCreateListing({
                       </div>
                     )}
 
-                    {/* Start Date Section */}
                     <div className="space-y-2">
                       <label className="flex text-[var(--primary-text-color)] text-sm font-medium">
                         Start Date (in America/New_York)
@@ -674,7 +659,6 @@ export default function AmbasssadorDaoSponsorsCreateListing({
                                   }
                                   onSelect={(date) => {
                                     field.onChange(date);
-                                    // Close popover when date is selected
                                     document.body.click();
                                   }}
                                   initialFocus
@@ -692,7 +676,6 @@ export default function AmbasssadorDaoSponsorsCreateListing({
                       )}
                     </div>
 
-                    {/* End Date Section */}
                     <div className="space-y-2">
                       <label className="flex text-[var(--primary-text-color)] text-sm font-medium">
                         End Date (in America/New_York)
@@ -734,7 +717,6 @@ export default function AmbasssadorDaoSponsorsCreateListing({
                                   }
                                   onSelect={(date) => {
                                     field.onChange(date);
-                                    // Close popover when date is selected
                                     document.body.click();
                                   }}
                                   initialFocus
@@ -787,7 +769,6 @@ export default function AmbasssadorDaoSponsorsCreateListing({
                       )}
                     </div>
 
-                    {/* Skills Section */}
                     <div className="space-y-2">
                       <label className="flex text-[var(--primary-text-color)] text-sm font-medium">
                         Skills Needed
@@ -830,7 +811,6 @@ export default function AmbasssadorDaoSponsorsCreateListing({
                       </div>
                     </div>
 
-                    {/* Contact Section */}
                     <div className="space-y-2">
                       <label className="flex text-[var(--primary-text-color)] text-sm font-medium">
                         Point of Contact (TG / X / Email)
@@ -855,7 +835,6 @@ export default function AmbasssadorDaoSponsorsCreateListing({
                       )}
                     </div>
 
-                    {/* Custom Questions Section */}
                     <div className="space-y-2">
                       <h3 className="text-lg font-semibold">
                         Custom Questions
