@@ -632,6 +632,10 @@ const SponsorForm = ({ handleClose }: { handleClose: () => void }) => {
       first_name: userData?.first_name || "",
       last_name: userData?.last_name || "",
       username: userData?.username || "",
+      location: userData?.location || "",
+      profile_image: userData?.profile_image || "",
+      logo: userData?.logo || "",
+      company_user_name: userData?.company_user_name || "",
     },
   });
 
@@ -650,8 +654,6 @@ const SponsorForm = ({ handleClose }: { handleClose: () => void }) => {
   const company_username = watch("company_user_name");
   const profile_image = watch("profile_image");
   const logo = watch("logo");
-
-  console.log(logo, profile_image)
 
   const { mutateAsync: updateSponsorProfile, isPending: isUpdatingProfile } =
     useUpdateSponsorProfileMutation();
@@ -884,7 +886,7 @@ const SponsorForm = ({ handleClose }: { handleClose: () => void }) => {
         <FileUploader
           fileSize={profileImageSize}
           singleFile={true}
-          previewUrl={previewImage}
+          previewUrl={previewImage || profile_image}
           fileName={profileImageName}
           handleFileUpload={handleProfileImageUpload}
           isUploading={isUploading}
@@ -974,7 +976,7 @@ const SponsorForm = ({ handleClose }: { handleClose: () => void }) => {
           <FileUploader
           fileSize={logoSize}
             singleFile={true}
-            previewUrl={previewLogo}
+            previewUrl={previewLogo || logo}
             fileName={companyLogoName}
             handleFileUpload={handleCompanyLogoUpload}
             isUploading={isUploading}

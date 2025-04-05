@@ -125,7 +125,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
               <div className="flex flex-col">
                 <span className="truncate">{fileName}</span>
                 <p className="text-xs text-left text-[var(--secondary-text-color)]">
-                {fileSize ? Math.round(fileSize / 1024) : 0}kb
+                {fileSize && `${Math.round(fileSize / 1024)}kb`}
               </p>
               </div>
             

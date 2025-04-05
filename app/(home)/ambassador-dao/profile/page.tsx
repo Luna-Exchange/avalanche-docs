@@ -101,9 +101,9 @@ const AmbasssadorDaoProfilePage = () => {
         <div className="border rounded-lg p-6 mb-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b-2 pb-8">
             <div className="flex items-center mb-4 md:mb-0">
-              <div className="w-16 h-16 bg-blue-500 rounded-full mr-4 overflow-hidden">
+              <div className="w-16 h-16 rounded-full mr-4 overflow-hidden">
                 <Image
-                  src={profile.profile_image || Token}
+                  src={profile.profile_image}
                   width={40}
                   height={40}
                   alt="Profile"
