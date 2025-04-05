@@ -43,6 +43,7 @@ import dynamic from "next/dynamic";
 import FullScreenLoader from "../full-screen-loader";
 import { PublishOpportunityModal } from "./publish-opportunity-modal";
 import toast from "react-hot-toast";
+import DatePicker from "../DatePicker";
 const MarkdownEditor = dynamic(() => import("../markdown-editor"), {
   ssr: false,
 });
@@ -480,13 +481,13 @@ export default function AmbasssadorDaoSponsorsCreateListing({
                                 onChange={(e) => {
                                   const inputValue = e.target.value;
                                   if (inputValue === "") {
-                                    field.onChange(""); 
+                                    field.onChange("");
                                   } else if (+inputValue === 0) {
-                                    field.onChange(""); 
+                                    field.onChange("");
                                   } else {
                                     const numValue = Number(inputValue);
                                     if (numValue < 1) {
-                                      field.onChange(""); 
+                                      field.onChange("");
                                     } else {
                                       field.onChange(numValue);
                                     }
@@ -630,41 +631,13 @@ export default function AmbasssadorDaoSponsorsCreateListing({
                           rules={{ required: "Start date is required" }}
                           render={({ field }) => (
                             <Popover>
-                              <PopoverTrigger asChild>
-                                <Button
-                                  variant="outline"
-                                  className="bg-[var(--default-background-color)] border-[var(--default-border-color)] justify-between text-left font-normal"
-                                >
-                                  {field.value ? (
-                                    format(new Date(field.value), "PPP")
-                                  ) : (
-                                    <span>Pick a date</span>
-                                  )}
-                                  <CalendarIcon
-                                    className="h-4 w-4 opacity-50"
-                                    color="var(--primary-text-color)"
-                                  />
-                                </Button>
-                              </PopoverTrigger>
-                              <PopoverContent
-                                className="w-auto p-0"
-                                align="start"
-                              >
-                                <Calendar
-                                  mode="single"
-                                  selected={
-                                    field.value
-                                      ? new Date(field.value)
-                                      : undefined
-                                  }
-                                  onSelect={(date) => {
-                                    field.onChange(date);
-                                    document.body.click();
-                                  }}
-                                  initialFocus
-                                  className="text-[var(--primary-text-color)] bg-[#fafafa] dark:bg-[#09090B]"
-                                />
-                              </PopoverContent>
+                              <DatePicker
+                                value={field.value || undefined}
+                                onChange={(date) => {
+                                  field.onChange(date);
+                                  document.body.click();
+                                }}
+                              />
                             </Popover>
                           )}
                         />
@@ -688,41 +661,13 @@ export default function AmbasssadorDaoSponsorsCreateListing({
                           rules={{ required: "End date is required" }}
                           render={({ field }) => (
                             <Popover>
-                              <PopoverTrigger asChild>
-                                <Button
-                                  variant="outline"
-                                  className="bg-[var(--default-background-color)] border-[var(--default-border-color)] justify-between text-left font-normal"
-                                >
-                                  {field.value ? (
-                                    format(new Date(field.value), "PPP")
-                                  ) : (
-                                    <span>Pick a date</span>
-                                  )}
-                                  <CalendarIcon
-                                    className="h-4 w-4 opacity-50"
-                                    color="var(--primary-text-color)"
-                                  />
-                                </Button>
-                              </PopoverTrigger>
-                              <PopoverContent
-                                className="w-auto p-0"
-                                align="start"
-                              >
-                                <Calendar
-                                  mode="single"
-                                  selected={
-                                    field.value
-                                      ? new Date(field.value)
-                                      : undefined
-                                  }
-                                  onSelect={(date) => {
-                                    field.onChange(date);
-                                    document.body.click();
-                                  }}
-                                  initialFocus
-                                  className="text-[var(--primary-text-color)] bg-[#fafafa] dark:bg-[#09090B]"
-                                />
-                              </PopoverContent>
+                              <DatePicker
+                                value={field.value || undefined}
+                                onChange={(date) => {
+                                  field.onChange(date);
+                                  document.body.click();
+                                }}
+                              />
                             </Popover>
                           )}
                         />
