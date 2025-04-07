@@ -5,7 +5,6 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import Tone from "@/public/ambassador-dao-images/Frame.png";
 import Avatar from "@/public/ambassador-dao-images/Avatar.svg";
-
 import Halftone from "@/public/ambassador-dao-images/Halftone.png";
 import { useFetchUserStatsDataQuery } from "@/services/ambassador-dao/requests/auth";
 import {
@@ -15,6 +14,8 @@ import {
 import FullScreenLoader from "@/components/ambassador-dao/full-screen-loader";
 import { ArrowRight } from "lucide-react";
 import { Pagination } from "@/components/ambassador-dao/ui/Pagination";
+import Loader from "@/components/ambassador-dao/ui/Loader";
+import EmptyState from "@/components/ambassador-dao/ui/EmptyState";
 
 function ProfileContent() {
   const pathname = usePathname();
@@ -93,7 +94,7 @@ function ProfileContent() {
     },
   };
 
-  if (isLoadingDetails || isLoadingStats || isLoadingPastActivities) {
+  if (isLoadingDetails || isLoadingStats) {
     return (
       <div className="bg-[#fff] dark:bg-[#000] text-[var(--white-text-color)] min-h-screen flex justify-center items-center">
         <FullScreenLoader />
@@ -101,7 +102,6 @@ function ProfileContent() {
     );
   }
 
-  console.log(userPastActivity, isLoadingPastActivities);
 
   const goToDetails = (type: string, id: string) => {
     const path =
@@ -239,7 +239,12 @@ function ProfileContent() {
         <div className="border w-full rounded-lg p-6 mb-6">
           <h2 className="text-2xl font-medium my-4">Portfolio</h2>
           <hr className="mb-8 mt-10" />
-
+          {isLoadingPastActivities && <Loader />}
+          {!isLoadingPastActivities && userPastActivity?.data?.length === 0 && (
+            <div className="flex justify-center items-center">
+              No past activities
+            </div>
+          )}
           {!isLoadingPastActivities &&
             userPastActivity?.data &&
             userPastActivity?.data?.length > 0 &&
@@ -298,15 +303,13 @@ function ProfileContent() {
             )}
         </div>
         {userPastActivity?.metadata?.last_page > 1 && (
-        <Pagination
-          metadata={userPastActivity?.metadata}
-          onPageChange={handlePageChange}
-          className="my-8"
-        />
-      )}
+          <Pagination
+            metadata={userPastActivity?.metadata}
+            onPageChange={handlePageChange}
+            className="my-8"
+          />
+        )}
       </div>
-
-     
     </div>
   );
 }
