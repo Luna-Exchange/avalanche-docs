@@ -2979,10 +2979,10 @@ vite-plugin-dts@^4.5.0:
   optionalDependencies:
     fsevents "~2.3.3"
 
-vite@^6.0.12:
-  version "6.0.12"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-6.0.12.tgz#0e3de2441057011f7c20bf018ea16d3824bdbd6b"
-  integrity sha512-gzLogvGSgX2xyAt0J5qhJ7SmdO5aLdShABkU8Ev7dIl8AcrlFSLcj9GHReSq9pGJF/q5C4CZKdtDlkC6DyvQ3w==
+vite@^6.0.15:
+  version "6.0.15"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-6.0.15.tgz#b43167e6bf93195a460424a56bb323abe0bf1cce"
+  integrity sha512-uC/aEgK2B7Ryaznyfj6h1PMUe4G7/6cKG97idqJFcgasmaoIRoemtlDQbsTTb6y5n3ly2L3kTgMR3sso9ASz0g==
   dependencies:
     esbuild "^0.24.2"
     postcss "^8.4.49"
