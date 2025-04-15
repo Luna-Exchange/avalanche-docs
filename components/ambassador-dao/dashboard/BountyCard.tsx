@@ -69,7 +69,7 @@ export const BountyCard = ({ bounty }: IBountyDataType) => {
           </div>
           <div className="flex flex-col gap-3">
             {parseFloat(total_budget) > 0 && (
-              <span className="text-[var(--white-text-color)] flex items-center gap-1">
+              <span className="text-[var(--white-text-color)] flex items-center gap-1 shrink-0">
                 <Image src={Token} alt="$" />
                 {parseFloat(total_budget).toLocaleString()}
               </span>

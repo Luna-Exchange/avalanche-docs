@@ -47,7 +47,7 @@ export const useVerifyPasscodeMutation = (
     },
     onSuccess: (data) => {
       queryclient.invalidateQueries({ queryKey: ["fetchUserProfile"] });
-      toast.success("Verification successful");
+      toast.success("Verification successful, redirecting you to dashboard...");
       if (!data.user.role || !data.user.first_name) {
         router.push("/ambassador-dao/onboard");
         onClose();
@@ -152,7 +152,7 @@ export const useFetchUserStatsDataQuery = (
       const res = await axiosInstance.get(`${API_DEV}/users/stats/${username}`);
       return res.data.data as IUserStats;
     },
-    queryKey: ["fetchUserStats"],
+    queryKey: ["fetchUserStats", username],
     staleTime: Infinity,
     refetchOnWindowFocus: false,
     enabled: !!username,
