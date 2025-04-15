@@ -59,10 +59,10 @@ export const JobCard = ({ job }: IJobDataType) => {
             </div>
           </div>
           <div className='flex items-center'>
-            <span className='text-[var(--white-text-color)] flex items-center gap-1'>
+            {parseFloat(total_budget) > 0 && <span className='text-[var(--white-text-color)] flex items-center gap-1'>
               <Image src={Token} alt='$' />
               {parseFloat(total_budget).toLocaleString()} USDC
-            </span>
+            </span>}
           </div>
         </div>
       </div>
