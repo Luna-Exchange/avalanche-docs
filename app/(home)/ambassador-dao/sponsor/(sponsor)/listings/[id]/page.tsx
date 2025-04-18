@@ -7,6 +7,7 @@ import {
   BriefcaseBusiness,
   FileText,
   Hourglass,
+  Loader2,
   MessagesSquare,
 } from "lucide-react";
 import Link from "next/link";
@@ -41,6 +42,8 @@ import { SumbissionReviewDetailsModal } from "@/components/ambassador-dao/sectio
 import { MarkSubmissionAsPaidModal } from "@/components/ambassador-dao/sections/mark-as-paid";
 import { useFetchOpportunityComment } from "@/services/ambassador-dao/requests/opportunity";
 import { CommentsModal } from "@/components/ambassador-dao/sections/comments-modal";
+import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 const AmbasssadorDaoSponsorsListingsSubmissions = () => {
   const params = useParams<{ id: string }>();
 
@@ -53,12 +56,12 @@ const AmbasssadorDaoSponsorsListingsSubmissions = () => {
 
   const [commentsModal, setCommentsModal] = useState(false);
   return (
-    <div className='space-y-6'>
+    <div className="space-y-6">
       <Link
         href={"/ambassador-dao/sponsor/listings"}
-        className='flex items-center text-sm gap-2 p-2 cursor-pointer rounded-md w-fit bg-[var(--default-background-color)] border border-[var(--default-border-color)]'
+        className="flex items-center text-sm gap-2 p-2 cursor-pointer rounded-md w-fit bg-[var(--default-background-color)] border border-[var(--default-border-color)]"
       >
-        <ArrowLeft color='var(--white-text-color)' size={16} />
+        <ArrowLeft color="var(--white-text-color)" size={16} />
         Go Back
       </Link>
 
@@ -67,31 +70,31 @@ const AmbasssadorDaoSponsorsListingsSubmissions = () => {
       ) : (
         <>
           {listing && (
-            <div className='border border-[var(--default-border-color)] p-2 rounded-lg md:p-4 transition-colors'>
-              <div className='flex flex-col md:flex-row gap-3 items-start justify-between mb-4'>
-                <div className='flex gap-3'>
+            <div className="border border-[var(--default-border-color)] p-2 rounded-lg md:p-4 transition-colors">
+              <div className="flex flex-col md:flex-row gap-3 items-start justify-between mb-4">
+                <div className="flex gap-3">
                   <div>
                     <Image
                       src={listing.created_by.company_profile.logo}
-                      alt='logo'
+                      alt="logo"
                       width={60}
                       height={60}
-                      className='shrink-0 rounded-full object-cover w-14 h-14'
+                      className="shrink-0 rounded-full object-cover w-14 h-14"
                     />
                   </div>
                   <div>
-                    <h3 className='text-lg font-medium text-red-500'>
+                    <h3 className="text-lg font-medium text-red-500">
                       {listing?.title}
                     </h3>
-                    <p className='text-[var(--secondary-text-color)] font-light text-sm'>
+                    <p className="text-[var(--secondary-text-color)] font-light text-sm">
                       {listing.created_by.company_profile.name}
                     </p>
-                    <div className='flex items-center space-x-3 mt-2 overflow-x-auto'>
-                      <div className='flex items-center text-sm text-[var(--secondary-text-color)] capitalize'>
+                    <div className="flex items-center space-x-3 mt-2 overflow-x-auto">
+                      <div className="flex items-center text-sm text-[var(--secondary-text-color)] capitalize">
                         <BriefcaseBusiness
-                          color='#9F9FA9'
+                          color="#9F9FA9"
                           size={14}
-                          className='mr-1'
+                          className="mr-1"
                         />
                         {listing.type.toLowerCase()}
                       </div>
@@ -99,8 +102,8 @@ const AmbasssadorDaoSponsorsListingsSubmissions = () => {
                         <Hourglass color='#9F9FA9' size={14} className='mr-1' />
                         Due in {getTimeLeft(listing.end_date)}
                       </div> */}
-                      <div className='flex items-center text-sm text-[var(--secondary-text-color)]'>
-                        <FileText color='#9F9FA9' size={14} className='mr-1' />
+                      <div className="flex items-center text-sm text-[var(--secondary-text-color)]">
+                        <FileText color="#9F9FA9" size={14} className="mr-1" />
                         {listing.type === "JOB"
                           ? `${listing._count.applications} ${
                               listing._count.applications === 1
@@ -117,22 +120,22 @@ const AmbasssadorDaoSponsorsListingsSubmissions = () => {
                   </div>
                 </div>
 
-                <div className='flex items-center gap-2 shrink-0'>
+                <div className="flex items-center gap-2 shrink-0">
                   <Image
                     src={USDCICON}
-                    alt='USDC'
+                    alt="USDC"
                     width={20}
                     height={20}
-                    className='shrink-0'
+                    className="shrink-0"
                   />
-                  <span className='text-[var(--white-text-color)] text-sm'>
+                  <span className="text-[var(--white-text-color)] text-sm">
                     {listing.total_budget.toLocaleString()} USDC
                   </span>
                 </div>
               </div>
 
-              <div className='flex gap-3 flex-col md:flex-row md:justify-between md:items-center'>
-                <div className='flex gap-2 items-center overflow-x-auto py-2'>
+              <div className="flex gap-3 flex-col md:flex-row md:justify-between md:items-center">
+                <div className="flex gap-2 items-center overflow-x-auto py-2">
                   {listing.skills.map((skill, index) => (
                     <div key={index}>
                       <Outline label={skill.name} />
@@ -142,16 +145,16 @@ const AmbasssadorDaoSponsorsListingsSubmissions = () => {
                 <div>
                   {!!commentsData?.data?.length && (
                     <CustomButton
-                      className='px-4 !bg-transparent border border-[var(--default-border-color)] gap-2'
+                      className="px-4 !bg-transparent border border-[var(--default-border-color)] gap-2"
                       onClick={() => {
                         setCommentsModal(true);
                       }}
                     >
                       <MessagesSquare
                         size={16}
-                        color='var(--white-text-color)'
+                        color="var(--white-text-color)"
                       />
-                      <p className='text-sm text-[var(--white-text-color)]'>
+                      <p className="text-sm text-[var(--white-text-color)]">
                         Comments ({commentsData?.metadata?.total || 0})
                       </p>
                     </CustomButton>
@@ -202,23 +205,23 @@ const JobApplications = ({ listingId }: { listingId: string }) => {
   };
 
   const [exporting, setExporting] = useState(false);
+  const queryClient = useQueryClient();
 
-  const {  isSuccess, isPending, error } = useExportCsv(exporting, listingId);
-
+  const { isSuccess, isLoading, isPending, error } = useExportCsv(
+    exporting,
+    listingId
+  );
 
   const handleExport = () => {
-    console.log("Exporting data...");
+    queryClient.removeQueries({ queryKey: ["exportCsv", listingId] });
     setExporting(true);
   };
 
-
-   // Reset the export state when it's done
-   useEffect(() => {
-    if (isSuccess && !isPending) {
+  useEffect(() => {
+    if (isSuccess || error) {
       setExporting(false);
     }
-  }, [isSuccess, isPending]);
-  
+  }, [isSuccess, error]);
 
 
   useEffect(() => {
@@ -231,7 +234,7 @@ const JobApplications = ({ listingId }: { listingId: string }) => {
     };
   }, [query]);
 
-  console.log(exporting, isPending)
+
   return (
     <div className="border border-[var(--default-border-color)] rounded-md p-3 md:p-6">
       <div className="flex justify-between items-center mb-6">
@@ -241,10 +244,22 @@ const JobApplications = ({ listingId }: { listingId: string }) => {
         <div className="flex space-x-2">
           <button
             onClick={handleExport}
-            // disabled={isPending}
-            className="border text-sm border-[var(--default-border-color)] bg-[var(--primary-background-color)] text-[var(--primary-text-color)] rounded-md px-4 py-2 hover:bg-[var(--primary-hover-color)] transition-all duration-300 ease-in-out cursor-pointer"
+            className="border text-sm border-[var(--default-border-color)] bg-[var(--default-background-color)] text-[var(--primary-text-color)] rounded-md px-4 py-2 hover:bg-[var(--primary-hover-color)] transition-all duration-300 ease-in-out cursor-pointer"
+            disabled={isLoading || isPending}
           >
-            Export
+            {isLoading || isPending ? (
+              <div className="flex justify-center items-center h-5">
+                <div className="relative">
+                  <div className="absolute inset-0 animate-ping rounded-full opacity-50"></div>
+                  <Loader2
+                    className="text-[#FB2C36] w-10 h-5 animate-spin"
+                    color="#FB2C36"
+                  />
+                </div>
+              </div>
+            ) : (
+              "Export"
+            )}
           </button>
 
           <Select
@@ -404,9 +419,6 @@ const BountySubmissions = ({ listingId }: { listingId: string }) => {
     };
   }, [query]);
 
-
-
-
   const [isOpen, setIsOpen] = useState(false);
   const [submissionId, setSubmissionId] = useState("");
   const [submission, setSubmission] = useState<any>(null);
@@ -414,58 +426,69 @@ const BountySubmissions = ({ listingId }: { listingId: string }) => {
     useState(false);
 
     const [exporting, setExporting] = useState(false);
-
-    const {  isSuccess, isPending: isExporting, error } = useExportCsv(exporting, listingId);
-
-
+    const queryClient = useQueryClient();
+  
+    const { isSuccess, isLoading, isPending, error } = useExportCsv(
+      exporting,
+      listingId
+    );
+  
     const handleExport = () => {
-      console.log("Exporting data...");
+      queryClient.removeQueries({ queryKey: ["exportCsv", listingId] });
       setExporting(true);
     };
   
-  
-     // Reset the export state when it's done
-     useEffect(() => {
-      if (isSuccess && !isExporting) {
-        setExporting(false);
-      }
-    }, [isSuccess, isExporting]);
-    
-    // Handle any errors
     useEffect(() => {
-      if (error) {
-        console.error('Export failed:', error);
-        // Show error notification to user
+      if (isSuccess || error) {
         setExporting(false);
       }
-    }, [error]);
+    }, [isSuccess, error]);
+  
 
+  useEffect(() => {
+    if (error) {
+      toast.error(error.message || "Error while exporting");
+      setExporting(false);
+    }
+  }, [error]);
 
 
   return (
-    <div className='border border-[var(--default-border-color)] rounded-md p-3 md:p-6'>
-      <div className='flex justify-between items-center mb-6'>
-        <h2 className='text-xl font-medium text-[var(--primary-text-color)]'>
+    <div className="border border-[var(--default-border-color)] rounded-md p-3 md:p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-medium text-[var(--primary-text-color)]">
           All Submissions
         </h2>
-        <div className='flex space-x-2'>
+        <div className="flex space-x-2">
         <button
-              onClick={handleExport}
-              // disabled={isExporting}
-              className="border text-sm border-[var(--default-border-color)] bg-[var(--primary-background-color)] text-[var(--primary-text-color)] rounded-md px-4 py-2 hover:bg-[var(--primary-hover-color)] transition-all duration-300 ease-in-out cursor-pointer"
-            >
-              Export
-            </button>
+            onClick={handleExport}
+            className="border text-sm border-[var(--default-border-color)] bg-[var(--default-background-color)] text-[var(--primary-text-color)] rounded-md px-4 py-2 hover:bg-[var(--primary-hover-color)] transition-all duration-300 ease-in-out cursor-pointer"
+            disabled={isLoading || isPending}
+          >
+            {isLoading || isPending ? (
+              <div className="flex justify-center items-center h-5">
+                <div className="relative">
+                  <div className="absolute inset-0 animate-ping rounded-full opacity-50"></div>
+                  <Loader2
+                    className="text-[#FB2C36] w-10 h-5 animate-spin"
+                    color="#FB2C36"
+                  />
+                </div>
+              </div>
+            ) : (
+              "Export"
+            )}
+          </button>
 
           <Select
-            defaultValue='ALL'
+            defaultValue="ALL"
             onValueChange={setStatus}
-            iconColor='var(--primary-text-color)'
+            iconColor="var(--primary-text-color)"
           >
-            <SelectTrigger className='w-36 bg-[var(--default-background-color)] border-[var(--default-border-color)]'>
-              <SelectValue placeholder='Everything' />
+            <SelectTrigger className="w-36 bg-[var(--default-background-color)] border-[var(--default-border-color)]">
+              <SelectValue placeholder="Everything" />
             </SelectTrigger>
-            <SelectContent className='bg-[var(--default-background-color)] border-[var(--default-border-color)]'>
+            <SelectContent className="bg-[var(--default-background-color)] border-[var(--default-border-color)]">
               {opportunitySubmissionStatusOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
@@ -475,52 +498,52 @@ const BountySubmissions = ({ listingId }: { listingId: string }) => {
           </Select>
 
           <Input
-            placeholder='Search...'
-            className='bg-[var(--default-background-color)] border-[var(--default-border-color)] focus:ring-[#27272A] hidden md:block'
+            placeholder="Search..."
+            className="bg-[var(--default-background-color)] border-[var(--default-border-color)] focus:ring-[#27272A] hidden md:block"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
         </div>
       </div>
-      <hr className='border-[var(--default-border-color)] my-6' />
+      <hr className="border-[var(--default-border-color)] my-6" />
 
       {isLoadingSubmissions ? (
         <Loader />
       ) : (
         <>
           {!!listingSubmissions?.data?.length ? (
-            <div className='space-y-4'>
+            <div className="space-y-4">
               {listingSubmissions?.data.map((submission) => (
                 <div
                   key={submission.id}
-                  className='bg-[var(--default-background-color)] border border-[var(--default-border-color)] p-2 rounded-lg md:p-4 hover:border-black dark:hover:border-white transition-colors'
+                  className="bg-[var(--default-background-color)] border border-[var(--default-border-color)] p-2 rounded-lg md:p-4 hover:border-black dark:hover:border-white transition-colors"
                 >
-                  <div className='flex flex-col md:flex-row gap-3 md:items-center justify-between mb-4'>
-                    <div className='flex md:items-center gap-3'>
+                  <div className="flex flex-col md:flex-row gap-3 md:items-center justify-between mb-4">
+                    <div className="flex md:items-center gap-3">
                       <div>
                         <Image
                           src={
                             submission.submitter.profile_image ?? DefaultAvatar
                           }
-                          alt='user profile'
+                          alt="user profile"
                           width={60}
                           height={60}
-                          className='shrink-0 rounded-full object-cover w-14 h-14'
+                          className="shrink-0 rounded-full object-cover w-14 h-14"
                         />
                       </div>
                       <div>
-                        <h3 className='text-lg font-medium text-[var(--primary-text-color)]'>
+                        <h3 className="text-lg font-medium text-[var(--primary-text-color)]">
                           {submission.submitter.first_name}{" "}
                           {submission.submitter.last_name}
                         </h3>
-                        <p className='text-[var(--secondary-text-color)] font-light text-sm'>
+                        <p className="text-[var(--secondary-text-color)] font-light text-sm">
                           {submission.submitter.job_title ?? "--"}
                         </p>
-                        <div className='flex items-center space-x-3 mt-2 overflow-x-auto'>
-                          <div className='flex items-center text-sm text-[var(--secondary-text-color)]'>
+                        <div className="flex items-center space-x-3 mt-2 overflow-x-auto">
+                          <div className="flex items-center text-sm text-[var(--secondary-text-color)]">
                             <Hourglass
-                              color='#9F9FA9'
-                              className='w-3 h-3 mr-1'
+                              color="#9F9FA9"
+                              className="w-3 h-3 mr-1"
                             />
                             Submitted:{" "}
                             {new Date(
@@ -540,8 +563,8 @@ const BountySubmissions = ({ listingId }: { listingId: string }) => {
                     />
                   </div>
 
-                  <div className='flex justify-between gap-3'>
-                    <div className='flex gap-2 items-center overflow-x-auto'>
+                  <div className="flex justify-between gap-3">
+                    <div className="flex gap-2 items-center overflow-x-auto">
                       {submission.submitter.skills?.map((skill, index) => (
                         <div key={index}>
                           <Outline label={skill.name} />
@@ -550,7 +573,7 @@ const BountySubmissions = ({ listingId }: { listingId: string }) => {
                     </div>
                     {submission.status === "ACCEPTED" ? (
                       <CustomButton
-                        className='px-3'
+                        className="px-3"
                         isFullWidth={false}
                         onClick={() => {
                           setMarkSubmissionAsPaidOpen(true);
@@ -561,7 +584,7 @@ const BountySubmissions = ({ listingId }: { listingId: string }) => {
                       </CustomButton>
                     ) : (
                       <CustomButton
-                        className='px-3'
+                        className="px-3"
                         isFullWidth={false}
                         onClick={() => {
                           setSubmissionId(submission.id);
@@ -583,11 +606,11 @@ const BountySubmissions = ({ listingId }: { listingId: string }) => {
               />
             </div>
           ) : (
-            <div className='max-w-lg mx-auto p-2 my-6'>
-              <Image src={Avalance3d} objectFit='contain' alt='avalance icon' />
+            <div className="max-w-lg mx-auto p-2 my-6">
+              <Image src={Avalance3d} objectFit="contain" alt="avalance icon" />
 
-              <div className='my-2'>
-                <h2 className='text-[var(--white-text-color)] text-2xl text-center font-medium'>
+              <div className="my-2">
+                <h2 className="text-[var(--white-text-color)] text-2xl text-center font-medium">
                   No submissions yet
                 </h2>
               </div>
