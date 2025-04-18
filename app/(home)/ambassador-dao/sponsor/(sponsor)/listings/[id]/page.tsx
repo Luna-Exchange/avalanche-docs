@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import CustomButton from "@/components/ambassador-dao/custom-button";
 import {
+  useExportCsv,
   useFetchSingleListing,
   useFetchSingleListingApplications,
   useFetchSingleListingSubmissions,
@@ -200,6 +201,26 @@ const JobApplications = ({ listingId }: { listingId: string }) => {
     setCurrentPage(page);
   };
 
+  const [exporting, setExporting] = useState(false);
+
+  const {  isSuccess, isPending, error } = useExportCsv(exporting, listingId);
+
+
+  const handleExport = () => {
+    console.log("Exporting data...");
+    setExporting(true);
+  };
+
+
+   // Reset the export state when it's done
+   useEffect(() => {
+    if (isSuccess && !isPending) {
+      setExporting(false);
+    }
+  }, [isSuccess, isPending]);
+  
+
+
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedQuery(query);
@@ -209,22 +230,32 @@ const JobApplications = ({ listingId }: { listingId: string }) => {
       clearTimeout(handler);
     };
   }, [query]);
+
+  console.log(exporting, isPending)
   return (
-    <div className='border border-[var(--default-border-color)] rounded-md p-3 md:p-6'>
-      <div className='flex justify-between items-center mb-6'>
-        <h2 className='text-xl font-medium text-[var(--primary-text-color)]'>
+    <div className="border border-[var(--default-border-color)] rounded-md p-3 md:p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-medium text-[var(--primary-text-color)]">
           All Applications
         </h2>
-        <div className='flex space-x-2'>
-          <Select
-            defaultValue='ALL'
-            onValueChange={setStatus}
-            iconColor='var(--primary-text-color)'
+        <div className="flex space-x-2">
+          <button
+            onClick={handleExport}
+            // disabled={isPending}
+            className="border text-sm border-[var(--default-border-color)] bg-[var(--primary-background-color)] text-[var(--primary-text-color)] rounded-md px-4 py-2 hover:bg-[var(--primary-hover-color)] transition-all duration-300 ease-in-out cursor-pointer"
           >
-            <SelectTrigger className='w-36 bg-[var(--default-background-color)] border-[var(--default-border-color)]'>
-              <SelectValue placeholder='Everything' />
+            Export
+          </button>
+
+          <Select
+            defaultValue="ALL"
+            onValueChange={setStatus}
+            iconColor="var(--primary-text-color)"
+          >
+            <SelectTrigger className="w-36 bg-[var(--default-background-color)] border-[var(--default-border-color)]">
+              <SelectValue placeholder="Everything" />
             </SelectTrigger>
-            <SelectContent className='bg-[var(--default-background-color)] border-[var(--default-border-color)]'>
+            <SelectContent className="bg-[var(--default-background-color)] border-[var(--default-border-color)]">
               {opportunityApplicationStatusOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
@@ -234,53 +265,53 @@ const JobApplications = ({ listingId }: { listingId: string }) => {
           </Select>
 
           <Input
-            placeholder='Search...'
-            className='bg-[var(--default-background-color)] border-[var(--default-border-color)] focus:ring-[#27272A] hidden md:block'
+            placeholder="Search..."
+            className="bg-[var(--default-background-color)] border-[var(--default-border-color)] focus:ring-[#27272A] hidden md:block"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
         </div>
       </div>
-      <hr className='border-[var(--default-border-color)] my-6' />
+      <hr className="border-[var(--default-border-color)] my-6" />
 
       {isLoadingApplications ? (
         <Loader />
       ) : (
         <>
           {!!listingApplications?.data?.length ? (
-            <div className='space-y-4'>
+            <div className="space-y-4">
               {listingApplications?.data.map((application) => (
                 <div
                   key={application.id}
-                  className='bg-[var(--default-background-color)] border border-[var(--default-border-color)] p-2 rounded-lg md:p-4 hover:border-black dark:hover:border-white transition-colors'
+                  className="bg-[var(--default-background-color)] border border-[var(--default-border-color)] p-2 rounded-lg md:p-4 hover:border-black dark:hover:border-white transition-colors"
                 >
-                  <div className='flex flex-col md:flex-row gap-3 md:items-center justify-between mb-4'>
-                    <div className='flex md:items-center gap-3'>
+                  <div className="flex flex-col md:flex-row gap-3 md:items-center justify-between mb-4">
+                    <div className="flex md:items-center gap-3">
                       <div>
                         <Image
                           src={
                             application.applicant.profile_image ?? DefaultAvatar
                           }
-                          alt='user profile'
+                          alt="user profile"
                           width={60}
                           height={60}
-                          className='shrink-0 rounded-full object-cover w-14 h-14'
+                          className="shrink-0 rounded-full object-cover w-14 h-14"
                         />
                       </div>
                       <div>
-                        <h3 className='text-lg font-medium text-[var(--primary-text-color)]'>
+                        <h3 className="text-lg font-medium text-[var(--primary-text-color)]">
                           {application.applicant.first_name}{" "}
                           {application.applicant.last_name}
                         </h3>
-                        <p className='text-[var(--secondary-text-color)] font-light text-sm'>
+                        <p className="text-[var(--secondary-text-color)] font-light text-sm">
                           {" "}
                           {application.applicant.job_title ?? "--"}
                         </p>
-                        <div className='flex items-center space-x-3 mt-2 overflow-x-auto'>
-                          <div className='flex items-center text-sm text-[var(--secondary-text-color)]'>
+                        <div className="flex items-center space-x-3 mt-2 overflow-x-auto">
+                          <div className="flex items-center text-sm text-[var(--secondary-text-color)]">
                             <Hourglass
-                              color='#9F9FA9'
-                              className='w-3 h-3 mr-1'
+                              color="#9F9FA9"
+                              className="w-3 h-3 mr-1"
                             />
                             Submitted:{" "}
                             {new Date(
@@ -300,8 +331,8 @@ const JobApplications = ({ listingId }: { listingId: string }) => {
                     />
                   </div>
 
-                  <div className='flex justify-between gap-3'>
-                    <div className='flex gap-2 items-center overflow-x-auto'>
+                  <div className="flex justify-between gap-3">
+                    <div className="flex gap-2 items-center overflow-x-auto">
                       {application.applicant.skills?.map((skill, index) => (
                         <div key={index}>
                           <Outline label={skill.name} />
@@ -312,7 +343,7 @@ const JobApplications = ({ listingId }: { listingId: string }) => {
                     <Link
                       href={`/ambassador-dao/sponsor/listings/${listingId}/${application.id}`}
                     >
-                      <CustomButton className='px-3' isFullWidth={false}>
+                      <CustomButton className="px-3" isFullWidth={false}>
                         Details
                       </CustomButton>
                     </Link>
@@ -328,11 +359,11 @@ const JobApplications = ({ listingId }: { listingId: string }) => {
               />
             </div>
           ) : (
-            <div className='max-w-lg mx-auto p-2 my-6'>
-              <Image src={Avalance3d} objectFit='contain' alt='avalance icon' />
+            <div className="max-w-lg mx-auto p-2 my-6">
+              <Image src={Avalance3d} objectFit="contain" alt="avalance icon" />
 
-              <div className='my-2'>
-                <h2 className='text-[var(--white-text-color)] text-2xl text-center font-medium'>
+              <div className="my-2">
+                <h2 className="text-[var(--white-text-color)] text-2xl text-center font-medium">
                   No applications yet
                 </h2>
               </div>
@@ -373,11 +404,44 @@ const BountySubmissions = ({ listingId }: { listingId: string }) => {
     };
   }, [query]);
 
+
+
+
   const [isOpen, setIsOpen] = useState(false);
   const [submissionId, setSubmissionId] = useState("");
   const [submission, setSubmission] = useState<any>(null);
   const [markSubmissionAsPaidOpen, setMarkSubmissionAsPaidOpen] =
     useState(false);
+
+    const [exporting, setExporting] = useState(false);
+
+    const {  isSuccess, isPending: isExporting, error } = useExportCsv(exporting, listingId);
+
+
+    const handleExport = () => {
+      console.log("Exporting data...");
+      setExporting(true);
+    };
+  
+  
+     // Reset the export state when it's done
+     useEffect(() => {
+      if (isSuccess && !isExporting) {
+        setExporting(false);
+      }
+    }, [isSuccess, isExporting]);
+    
+    // Handle any errors
+    useEffect(() => {
+      if (error) {
+        console.error('Export failed:', error);
+        // Show error notification to user
+        setExporting(false);
+      }
+    }, [error]);
+
+
+
   return (
     <div className='border border-[var(--default-border-color)] rounded-md p-3 md:p-6'>
       <div className='flex justify-between items-center mb-6'>
@@ -385,6 +449,14 @@ const BountySubmissions = ({ listingId }: { listingId: string }) => {
           All Submissions
         </h2>
         <div className='flex space-x-2'>
+        <button
+              onClick={handleExport}
+              // disabled={isExporting}
+              className="border text-sm border-[var(--default-border-color)] bg-[var(--primary-background-color)] text-[var(--primary-text-color)] rounded-md px-4 py-2 hover:bg-[var(--primary-hover-color)] transition-all duration-300 ease-in-out cursor-pointer"
+            >
+              Export
+            </button>
+
           <Select
             defaultValue='ALL'
             onValueChange={setStatus}
