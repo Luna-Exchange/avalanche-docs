@@ -74,7 +74,7 @@ const AmbasssadorDao = () => {
         {user?.role !== "AMBASSADOR" && (
           <AmbassadorCard
             title="Become a Client"
-            description="Reach 70,000+  talent from one single dashboard"
+            description="Post projects and hire top talent for your business needs"
             link="https://app.team1.io/ambassador/"
           />
         )}
