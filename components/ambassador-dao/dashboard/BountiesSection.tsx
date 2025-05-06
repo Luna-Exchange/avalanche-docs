@@ -54,7 +54,6 @@ const BountiesSection = ({
     onResetFilters;
   };
 
-  console.log(filters)
   return (
     <section className="border border-[var(--default-border-color)] rounded-md py-10 px-3">
       <div className="flex justify-between">
