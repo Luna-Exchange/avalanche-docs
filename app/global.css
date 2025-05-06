@@ -813,6 +813,7 @@ html body[data-scroll-locked] {
     position: relative;
     border: none;
   }
+
   header a[data-active="true"] {
     color: #fafafa !important;
   }
