@@ -45,9 +45,11 @@ import { useFetchOpportunityComment } from "@/services/ambassador-dao/requests/o
 import { CommentsModal } from "@/components/ambassador-dao/sections/comments-modal";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+
 const AmbasssadorDaoSponsorsListingsSubmissions = () => {
   const params = useParams<{ id: string }>();
-
+  const router = useRouter();
   const { data: listing, isLoading } = useFetchSingleListing(params.id);
 
   const { data: commentsData } = useFetchOpportunityComment(params.id, {
@@ -58,13 +60,15 @@ const AmbasssadorDaoSponsorsListingsSubmissions = () => {
   const [commentsModal, setCommentsModal] = useState(false);
   return (
     <div className='space-y-6'>
-      <Link
-        href={"/ambassador-dao/sponsor/listings"}
+      <div
         className='flex items-center text-sm gap-2 p-2 cursor-pointer rounded-md w-fit bg-[var(--default-background-color)] border border-[var(--default-border-color)]'
+        onClick={() => {
+          router.back();
+        }}
       >
         <ArrowLeft color='var(--white-text-color)' size={16} />
         Go Back
-      </Link>
+      </div>
 
       {isLoading ? (
         <Loader />
@@ -129,16 +133,12 @@ const AmbasssadorDaoSponsorsListingsSubmissions = () => {
                 </div>
 
                 <div className='flex items-center gap-2 shrink-0'>
-                  <Image
-                    src={USDCICON}
-                    alt='USDC'
-                    width={20}
-                    height={20}
-                    className='shrink-0'
-                  />
-                  <span className='text-[var(--white-text-color)] text-sm'>
-                    {listing.total_budget.toLocaleString()} USDC
-                  </span>
+                  {listing.total_budget > 0 && (
+                    <span className='dark:text-[#FFFFFF] dark:bg-[#162456] font-bold text-[#1C398E] bg-[#EFF6FF] border border-[#2B7FFF] rounded-md p-2 px-3 flex items-center gap-1 shrink-0 text-xs'>
+                      <Image src={USDCICON} alt='$' />
+                      {listing.total_budget.toLocaleString()}
+                    </span>
+                  )}
                 </div>
               </div>
 

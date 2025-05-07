@@ -23,7 +23,7 @@ import {
   useUpdateSponsorProfileMutation,
   useUpdateTalentProfileMutation,
 } from "@/services/ambassador-dao/requests/onboard";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import CustomButton from "@/components/ambassador-dao/custom-button";
 import { useForm } from "react-hook-form";
 import {
@@ -62,6 +62,8 @@ const userTypes = [
 
 const AmbasssadorDaoOnboardPage = () => {
   const { data: userData, isLoading } = useFetchUserDataQuery();
+  const searchParams = useSearchParams();
+  const update = searchParams.get("update");
   const [userType, setUserType] = useState<"TALENT" | "SPONSOR">("TALENT");
   const [selectionStep, setShowSelectionStep] = useState<
     "account_option" | "account_form"
@@ -141,7 +143,7 @@ const AmbasssadorDaoOnboardPage = () => {
                     key={idx}
                     className='flex items-center gap-3 text-[var(--primary-text-color)]'
                   >
-                    <Check color='white' size={16} />
+                    <Check color='var(--primary-text-color)' size={16} />
                     <p className='text-sm'>{perk}</p>
                   </div>
                 ))}
@@ -168,13 +170,9 @@ const AmbasssadorDaoOnboardPage = () => {
       )}
       {selectionStep === "account_form" && (
         <div className='bg-[var(--default-background-color)] rounded-xl border border-[var(--default-border-color)] p-6 py-10'>
-          {userType === ("USER" as "TALENT") && (
-            <TalentForm handleClose={handleClose} />
-          )}
-          {userType === ("AMBASSADOR" as "TALENT") && (
-            <TalentForm handleClose={handleClose} />
-          )}
-          {userType === "SPONSOR" && <SponsorForm handleClose={handleClose} />}
+          {userType === ("USER" as "TALENT") && <TalentForm />}
+          {userType === ("AMBASSADOR" as "TALENT") && <TalentForm />}
+          {userType === "SPONSOR" && <SponsorForm />}
         </div>
       )}
     </div>
@@ -183,7 +181,7 @@ const AmbasssadorDaoOnboardPage = () => {
 
 export default AmbasssadorDaoOnboardPage;
 
-const TalentForm = ({ handleClose }: { handleClose: () => void }) => {
+const TalentForm = () => {
   const router = useRouter();
   const { data: userData } = useFetchUserDataQuery();
   const [isDataFetched, setIsDataFetched] = useState(false);
@@ -211,6 +209,7 @@ const TalentForm = ({ handleClose }: { handleClose: () => void }) => {
   const [usernameStatus, setUsernameStatus] = useState<
     "checking" | "available" | "unavailable" | null
   >(null);
+  const [usernameError, setUsernameError] = useState<string | null>(null);
   const [stage, setStage] = useState(1);
 
   const pathname = usePathname();
@@ -284,8 +283,9 @@ const TalentForm = ({ handleClose }: { handleClose: () => void }) => {
               setUsernameStatus("unavailable");
             }
           },
-          onError: () => {
-            setUsernameStatus("unavailable");
+          onError: (error: any) => {
+            setUsernameStatus(null);
+            setUsernameError(error?.response?.data?.message);
           },
         });
       }, 500);
@@ -337,6 +337,7 @@ const TalentForm = ({ handleClose }: { handleClose: () => void }) => {
       },
       {
         onSuccess: () => {
+          console.log("success");
           if (isEditProfilePage) {
             return;
           } else {
@@ -471,6 +472,10 @@ const TalentForm = ({ handleClose }: { handleClose: () => void }) => {
                   Username is already taken
                 </p>
               )}
+
+              {usernameError && (
+                <p className='text-red-500 text-xs mt-1'>{usernameError}</p>
+              )}
             </div>
 
             <CustomSelect
@@ -511,16 +516,18 @@ const TalentForm = ({ handleClose }: { handleClose: () => void }) => {
             <div className='flex flex-wrap gap-2 mt-4'>
               {skills &&
                 !!skills.length &&
-                skills.map((badge, idx) => (
-                  <div
-                    key={idx}
-                    className='flex items-center gap-2 bg-[var(--default-background-color)] border border-[var(--default-border-color)] rounded-full px-3 py-1 text-sm cursor-pointer capitalize'
-                    onClick={() => addSkill(badge.id)}
-                  >
-                    {badge.name}
-                    <Plus size={16} color='#A1A1AA' />
-                  </div>
-                ))}
+                skills
+                  .filter((skill) => !selectedSkills.includes(skill.id))
+                  .map((badge, idx) => (
+                    <div
+                      key={idx}
+                      className='flex items-center gap-2 bg-[var(--default-background-color)] border border-[var(--default-border-color)] rounded-full px-3 py-1 text-sm cursor-pointer capitalize'
+                      onClick={() => addSkill(badge.id)}
+                    >
+                      {badge.name}
+                      <Plus size={16} color='#A1A1AA' />
+                    </div>
+                  ))}
 
               {!skills?.length && (
                 <>
@@ -533,33 +540,53 @@ const TalentForm = ({ handleClose }: { handleClose: () => void }) => {
           </div>
           <div>
             <CustomInput
-              id='socials'
-              label='Socials'
-              placeholder='Socials'
-              value={currentSocialLink}
-              onChange={(e) => setCurrentSocialLink(e.target.value)}
+              id='social-0'
+              label='Social Link'
+              placeholder='Enter social link'
+              type='url'
+              required
+              value={socialLinks[0] || ""}
+              onChange={(e) => {
+                const updatedLinks = [...socialLinks];
+                updatedLinks[0] = e.target.value;
+                setSocialLinks(updatedLinks);
+              }}
             />
+            {socialLinks.slice(1).map((link, idx) => (
+              <div key={idx + 1} className='mb-4'>
+                <CustomInput
+                  id={`social-${idx + 1}`}
+                  label={`Social ${idx + 2}`}
+                  placeholder='Enter social link'
+                  value={link}
+                  onChange={(e) => {
+                    const updatedLinks = [...socialLinks];
+                    updatedLinks[idx + 1] = e.target.value;
+                    setSocialLinks(updatedLinks);
+                  }}
+                />
+                <div className='flex justify-end'>
+                  <button
+                    type='button'
+                    className='flex items-center text-sm text-[var(--secondary-text-color)] font-medium gap-2 mt-2'
+                    onClick={() => removeSocialLink(link)}
+                  >
+                    <Minus size={14} color='var(--secondary-text-color)' />{" "}
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))}
             <div className='flex justify-end'>
               <button
                 type='button'
                 className='flex items-center text-sm text-[var(--secondary-text-color)] font-medium gap-2 mt-2'
-                onClick={addSocialLink}
+                onClick={() => setSocialLinks([...socialLinks, ""])}
               >
-                <Plus size={14} color='var(--secondary-text-color' /> Add Link
+                <Plus size={14} color='var(--secondary-text-color)' /> Add
+                Social Link
               </button>
             </div>
-          </div>
-          <div className='flex flex-wrap gap-2 mt-1'>
-            {socialLinks.map((link, idx) => (
-              <div
-                key={idx}
-                className='flex items-center gap-2 bg-[var(--default-background-color)] border border-[var(--default-border-color)] rounded-full px-3 py-1 text-sm cursor-pointer'
-                onClick={() => removeSocialLink(link)}
-              >
-                {link}
-                <Minus size={16} color='#A1A1AA' />
-              </div>
-            ))}
           </div>
 
           <hr className='border-[var(--default-border-color)] my-6' />
@@ -572,7 +599,7 @@ const TalentForm = ({ handleClose }: { handleClose: () => void }) => {
               className='px-6'
               disabled={!socialLinks.length || !selectedSkills.length}
             >
-              {isEditProfilePage ? "Update Profile" : "Create Profile"}
+              {isEditProfilePage ? "Submit Updated Details" : "Create Profile"}
             </CustomButton>
 
             {/* {isEditProfilePage && (
@@ -634,7 +661,7 @@ const TalentForm = ({ handleClose }: { handleClose: () => void }) => {
   );
 };
 
-const SponsorForm = ({ handleClose }: { handleClose: () => void }) => {
+const SponsorForm = () => {
   const [previewLogo, setPreviewLogo] = useState<string | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [isUploadingProfileImage, setIsUploadingProfileImage] = useState(false);
@@ -668,6 +695,10 @@ const SponsorForm = ({ handleClose }: { handleClose: () => void }) => {
   const [companyUsernameStatus, setCompanyUsernameStatus] = useState<
     "checking" | "available" | "unavailable" | null
   >(null);
+  const [usernameError, setUsernameError] = useState<string | null>(null);
+  const [companyUsernameError, setCompanyUsernameError] = useState<
+    string | null
+  >(null);
   const [profileImageName, setProfileImageName] = useState<string>("");
   const [companyLogoName, setCompanyLogoName] = useState<string>("");
   const [logoSize, setLogoSize] = useState<number>();
@@ -689,6 +720,9 @@ const SponsorForm = ({ handleClose }: { handleClose: () => void }) => {
   const { mutateAsync: uploadFile, isPending: isUploading } =
     useFileUploadMutation("image");
 
+  const pathname = usePathname();
+  const isEditProfilePage = pathname === "/ambassador-dao/edit-profile";
+
   useEffect(() => {
     if (username && username.length > 3) {
       setUsernameStatus("checking");
@@ -701,8 +735,9 @@ const SponsorForm = ({ handleClose }: { handleClose: () => void }) => {
               setUsernameStatus("unavailable");
             }
           },
-          onError: () => {
-            setUsernameStatus("unavailable");
+          onError: (error: any) => {
+            setUsernameStatus(null);
+            setUsernameError(error?.response?.data?.message);
           },
         });
       }, 500);
@@ -724,8 +759,9 @@ const SponsorForm = ({ handleClose }: { handleClose: () => void }) => {
               setCompanyUsernameStatus("unavailable");
             }
           },
-          onError: () => {
-            setCompanyUsernameStatus("unavailable");
+          onError: (error: any) => {
+            setCompanyUsernameStatus(null);
+            setCompanyUsernameError(error?.response?.data?.message);
           },
         });
       }, 500);
@@ -902,6 +938,9 @@ const SponsorForm = ({ handleClose }: { handleClose: () => void }) => {
                 Username is already taken
               </p>
             )}
+            {usernameError && (
+              <p className='text-red-500 text-xs mt-1'>{usernameError}</p>
+            )}
           </div>
 
           <CustomSelect
@@ -991,6 +1030,11 @@ const SponsorForm = ({ handleClose }: { handleClose: () => void }) => {
                   Company username is already taken
                 </p>
               )}
+              {companyUsernameError && (
+                <p className='text-red-500 text-xs mt-1'>
+                  {companyUsernameError}
+                </p>
+              )}
             </div>
           </div>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
@@ -1048,7 +1092,7 @@ const SponsorForm = ({ handleClose }: { handleClose: () => void }) => {
             isFullWidth={false}
             className='px-6'
           >
-            Create Sponsor
+            {isEditProfilePage ? "Submit Updated Details" : "Create Sponsor"}
           </CustomButton>
         </div>
       </form>
